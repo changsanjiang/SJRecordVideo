@@ -341,11 +341,6 @@
         return;
     }
     
-    NSURL *exportURL = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask].firstObject URLByAppendingPathComponent:@"_re_.mp4"];
-    if ( [[NSFileManager defaultManager] fileExistsAtPath:[exportURL.absoluteString substringFromIndex:7]] ) {
-        [[NSFileManager defaultManager] removeItemAtURL:exportURL error:nil];
-    }
-    
     [self exportAssets:compositionM completionHandle:block];
 }
 
