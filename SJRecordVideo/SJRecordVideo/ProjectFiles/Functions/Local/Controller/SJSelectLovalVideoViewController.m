@@ -121,7 +121,7 @@ static NSString * const SJLocalPreviewCollectionViewCellID = @"SJLocalPreviewCol
     _collectionView.dataSource = self;
     return _collectionView;
 }
-
+ 
 @end
 
 #import "SJVideoInfoEditingViewController.h"

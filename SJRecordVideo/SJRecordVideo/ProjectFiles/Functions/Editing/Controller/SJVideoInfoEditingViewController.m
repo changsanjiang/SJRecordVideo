@@ -72,10 +72,4 @@
     
 }
 
-// MARK: Status bar
-
-- (UIStatusBarStyle)preferredStatusBarStyle {
-    return UIStatusBarStyleLightContent;
-}
-
 @end
