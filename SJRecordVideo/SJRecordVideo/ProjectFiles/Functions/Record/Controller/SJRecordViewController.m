@@ -17,7 +17,6 @@
 #import "SJRecordVideoSession.h"
 
 
-
 // MARK: 通知处理
 
 @interface SJRecordViewController (DBNotifications)
@@ -40,6 +39,10 @@
 
 @end
 
+
+@interface SJRecordViewController (SJRecordVideoSessionDelegateMethods)<SJRecordVideoSessionDelegate>
+
+@end
 
 
 @interface SJRecordViewController (SJRecordControlAreaViewDelegateMethods)<SJRecordControlAreaViewDelegate>
@@ -168,6 +171,7 @@
 - (SJRecordVideoSession *)session {
     if ( _session ) return _session;
     _session = [SJRecordVideoSession new];
+    _session.delegate = self;
     return _session;
 }
 
@@ -175,6 +179,10 @@
 @end
 
 #import "SJRecordVideoEnumHeader.h"
+
+#import "SJVideoInfoEditingViewController.h"
+
+#import "SJSelectLovalVideoViewController.h"
 
 @implementation SJRecordViewController (SJRecordControlAreaViewDelegateMethods)
 
@@ -215,24 +223,25 @@
             // stop
             if ( self.areaView.recordedDuration >= self.areaView.minDuration ) {
                 __weak typeof(self) _self = self;
+                self.isRecording = NO;
                 self.areaView.enableRecordBtn = NO;
                 [self.session stopRecordingAndComplate:^(AVAsset *asset, UIImage *coverImage) {
-                    DBScreenOrientation direction = SJScreenOrientationLandscape;
+                    SJScreenOrientation direction = SJScreenOrientationLandscape;
                     if ( _recordingOrientation == UIDeviceOrientationPortrait ) {
                         direction = SJScreenOrientationPortrait;
                     }
-//                    DBPublishVideoEditingViewController *vc = [[DBPublishVideoEditingViewController alloc] initWithAsset:asset direction:direction];
-//                    vc.coverImage = coverImage;
-//                    [_self.navigationController pushViewController:vc animated:YES];
+                    SJVideoInfoEditingViewController *vc = [[SJVideoInfoEditingViewController alloc] initWithAsset:asset direction:direction];
+                    vc.coverImage = coverImage;
+                    [_self.navigationController pushViewController:vc animated:YES];
                     [_self.areaView resetDuration];
                     _self.areaView.enableRecordBtn = YES;
-                    _self.isRecording = NO;
                 }];
             }
         }
             break;
         case SJRecordControlAreaViewBtnTagLocal: {
-            
+            SJSelectLovalVideoViewController *vc = [[SJSelectLovalVideoViewController alloc] initWithSession:self.session];
+            [self.navigationController pushViewController:vc animated:YES];
         }
             break;
         case SJRecordControlAreaViewBtnTagDel: {
@@ -274,7 +283,6 @@
             if ( [self.session switchCameras] ) {
                 self.isRecording = NO;
                 [self.areaView resetDuration];
-                self.headerView.hiddenTorch = (self.session.cameraPosition == AVCaptureDevicePositionFront);
             }
         }
             break;
@@ -376,8 +384,21 @@
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
     if ( [keyPath isEqualToString:@"isRecording"] ) {
-        self.headerView.isRecording = self.isRecording;
         self.areaView.isRecording = self.isRecording;
+        if ( _isRecording ) {
+            self.headerView.hiddenTorch = YES;
+            self.headerView.hiddenCapture = YES;
+        }
+        else {
+            if ( 0 == self.areaView.recordedDuration ) {
+                self.headerView.hiddenTorch = (self.session.cameraPosition == AVCaptureDevicePositionFront);
+                self.headerView.hiddenCapture = NO;
+            }
+            else {
+                self.headerView.hiddenTorch = YES;
+                self.headerView.hiddenCapture = YES;
+            }
+        }
     }
     else if ( [keyPath isEqualToString:@"recordingOrientation"] ) {
         self.headerView.recordingOrientation = _recordingOrientation;
@@ -393,5 +414,13 @@
 
 
 
+// MARK: 转码进度
 
 
+@implementation SJRecordViewController (SJRecordVideoSessionDelegateMethods)
+
+- (void)session:(SJRecordVideoSession *)session exportProgress:(CGFloat)progress {
+    NSLog(@"exportProgress: %f", progress);
+}
+
+@end

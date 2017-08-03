@@ -24,11 +24,11 @@ typedef NS_ENUM(NSUInteger, SJRecordControlHeaderViewBtnTag) {
 
 @property (nonatomic, assign, readwrite) UIDeviceOrientation recordingOrientation;
 
-@property (nonatomic, assign, readwrite) BOOL isRecording;
-
 @property (nonatomic, assign, readwrite) BOOL torchSwitch;
 
 @property (nonatomic, assign, readwrite) BOOL hiddenTorch;
+
+@property (nonatomic, assign, readwrite) BOOL hiddenCapture;
 
 @end
 

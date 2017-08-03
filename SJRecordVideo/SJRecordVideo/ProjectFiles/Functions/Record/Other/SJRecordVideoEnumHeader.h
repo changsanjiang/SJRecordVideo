@@ -9,7 +9,7 @@
 #ifndef SJRecordVideoEnumHeader_h
 #define SJRecordVideoEnumHeader_h
 
-typedef NS_ENUM(NSUInteger, DBScreenOrientation) {
+typedef NS_ENUM(NSUInteger, SJScreenOrientation) {
     /**
      *  横屏
      */

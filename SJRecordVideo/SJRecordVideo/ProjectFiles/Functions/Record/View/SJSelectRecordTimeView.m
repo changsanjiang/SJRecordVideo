@@ -56,7 +56,6 @@
 
 - (void)clickedBtn:(UIButton *)btn {
     NSLog(@"clicked btn");
-    if ( _isRecordingOrPaused ) return;
     switch (btn.tag) {
             // 秒
         case 0: {

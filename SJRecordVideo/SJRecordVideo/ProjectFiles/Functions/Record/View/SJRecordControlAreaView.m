@@ -378,6 +378,8 @@
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
     if ( [keyPath isEqualToString:@"recordedDuration"] ) {
         
+        _selectRecordTimeView.enableBtns = ( 0 == _recordedDuration );
+        
         _completeBtn.enabled = ( _recordedDuration >= _minDuration );
         
         BOOL isRecordingOrPaused = ( 0 != _recordedDuration );

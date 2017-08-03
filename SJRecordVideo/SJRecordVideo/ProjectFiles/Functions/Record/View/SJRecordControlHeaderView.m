@@ -38,11 +38,13 @@
 // MARK: Setter
 
 - (void)setTorchSwitch:(BOOL)torchSwitch {
+    if ( _torchSwitch == torchSwitch ) return;
     _torchSwitch = torchSwitch;
     _torchBtn.selected = torchSwitch;
 }
 
 - (void)setHiddenTorch:(BOOL)hiddenTorch {
+    if ( _hiddenTorch == hiddenTorch ) return;
     _hiddenTorch = hiddenTorch;
     CGFloat alpha = 0.001;
     if ( _hiddenTorch ) alpha = 0.001;
@@ -52,20 +54,19 @@
     }];
 }
 
-- (void)setIsRecording:(BOOL)isRecording {
-    _isRecording = isRecording;
-
+- (void)setHiddenCapture:(BOOL)hiddenCapture {
+    if ( _hiddenCapture == hiddenCapture ) return;
+    _hiddenCapture = hiddenCapture;
     CGFloat alpha = 0.001;
-    if ( _isRecording ) alpha = 0.001;
+    if ( _hiddenCapture ) alpha = 0.001;
     else alpha = 1;
-    
     [UIView animateWithDuration:0.25 animations:^{
         self.captureDirectionBtn.alpha = alpha;
-        self.torchBtn.alpha = alpha;
     }];
 }
 
 - (void)setRecordingOrientation:(UIDeviceOrientation)recordingOrientation {
+    if ( _recordingOrientation == recordingOrientation ) return;
     _recordingOrientation = recordingOrientation;
     CGAffineTransform transform = CGAffineTransformIdentity;
     switch (recordingOrientation) {

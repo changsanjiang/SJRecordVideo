@@ -12,8 +12,6 @@
 
 @property (nonatomic, assign, readwrite) BOOL enableBtns;
 
-@property (nonatomic, assign, readwrite) BOOL isRecordingOrPaused;
-
 @property (nonatomic, strong, readwrite) NSString *btn1Title;
 @property (nonatomic, strong, readwrite) NSString *btn2Title;
 
