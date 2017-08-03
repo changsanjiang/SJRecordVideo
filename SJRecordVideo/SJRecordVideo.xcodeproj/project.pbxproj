@@ -26,6 +26,11 @@
 		77BF9EE21F334C8C008A4735 /* SJSelectLovalVideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BF9EE11F334C8C008A4735 /* SJSelectLovalVideoViewController.m */; };
 		77BF9EE51F334CF0008A4735 /* SJLocalPreviewCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BF9EE41F334CF0008A4735 /* SJLocalPreviewCollectionViewCell.m */; };
 		77BF9EE91F334D37008A4735 /* SJLoalSelectVideoModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BF9EE81F334D37008A4735 /* SJLoalSelectVideoModel.m */; };
+		77BF9EEF1F335142008A4735 /* sample1.png in Resources */ = {isa = PBXBuildFile; fileRef = 77BF9EEA1F335142008A4735 /* sample1.png */; };
+		77BF9EF01F335142008A4735 /* sample4.png in Resources */ = {isa = PBXBuildFile; fileRef = 77BF9EEB1F335142008A4735 /* sample4.png */; };
+		77BF9EF11F335142008A4735 /* sample0.png in Resources */ = {isa = PBXBuildFile; fileRef = 77BF9EEC1F335142008A4735 /* sample0.png */; };
+		77BF9EF21F335142008A4735 /* sample2.png in Resources */ = {isa = PBXBuildFile; fileRef = 77BF9EED1F335142008A4735 /* sample2.png */; };
+		77BF9EF31F335142008A4735 /* sample3.png in Resources */ = {isa = PBXBuildFile; fileRef = 77BF9EEE1F335142008A4735 /* sample3.png */; };
 		B0C482B4C68FF235FA94D27B /* libPods-SJRecordVideo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C06A814406A9E81060980631 /* libPods-SJRecordVideo.a */; };
 /* End PBXBuildFile section */
 
@@ -69,6 +74,11 @@
 		77BF9EE41F334CF0008A4735 /* SJLocalPreviewCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SJLocalPreviewCollectionViewCell.m; sourceTree = "<group>"; };
 		77BF9EE71F334D37008A4735 /* SJLoalSelectVideoModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SJLoalSelectVideoModel.h; sourceTree = "<group>"; };
 		77BF9EE81F334D37008A4735 /* SJLoalSelectVideoModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SJLoalSelectVideoModel.m; sourceTree = "<group>"; };
+		77BF9EEA1F335142008A4735 /* sample1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sample1.png; sourceTree = "<group>"; };
+		77BF9EEB1F335142008A4735 /* sample4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sample4.png; sourceTree = "<group>"; };
+		77BF9EEC1F335142008A4735 /* sample0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sample0.png; sourceTree = "<group>"; };
+		77BF9EED1F335142008A4735 /* sample2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sample2.png; sourceTree = "<group>"; };
+		77BF9EEE1F335142008A4735 /* sample3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sample3.png; sourceTree = "<group>"; };
 		962D501CD75708C1E48142E8 /* Pods-SJRecordVideo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SJRecordVideo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SJRecordVideo/Pods-SJRecordVideo.debug.xcconfig"; sourceTree = "<group>"; };
 		C06A814406A9E81060980631 /* libPods-SJRecordVideo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SJRecordVideo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC5BA3934B449C0167784770 /* Pods-SJRecordVideo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SJRecordVideo.release.xcconfig"; path = "Pods/Target Support Files/Pods-SJRecordVideo/Pods-SJRecordVideo.release.xcconfig"; sourceTree = "<group>"; };
@@ -122,6 +132,11 @@
 				77BF9E821F33045D008A4735 /* LaunchScreen.storyboard */,
 				77BF9E851F33045D008A4735 /* Info.plist */,
 				77BF9E751F33045D008A4735 /* main.m */,
+				77BF9EEA1F335142008A4735 /* sample1.png */,
+				77BF9EEB1F335142008A4735 /* sample4.png */,
+				77BF9EEC1F335142008A4735 /* sample0.png */,
+				77BF9EED1F335142008A4735 /* sample2.png */,
+				77BF9EEE1F335142008A4735 /* sample3.png */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -389,9 +404,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				77BF9EF01F335142008A4735 /* sample4.png in Resources */,
 				77BF9E841F33045D008A4735 /* LaunchScreen.storyboard in Resources */,
+				77BF9EF11F335142008A4735 /* sample0.png in Resources */,
+				77BF9EF31F335142008A4735 /* sample3.png in Resources */,
+				77BF9EEF1F335142008A4735 /* sample1.png in Resources */,
 				77BF9E811F33045D008A4735 /* Assets.xcassets in Resources */,
 				77BF9EB01F330C04008A4735 /* SJRecordVideoAssets.bundle in Resources */,
+				77BF9EF21F335142008A4735 /* sample2.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
