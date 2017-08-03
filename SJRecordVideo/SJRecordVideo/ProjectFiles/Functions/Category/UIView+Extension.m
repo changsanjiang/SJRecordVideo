@@ -486,6 +486,10 @@
 
 }
 
++ (UIButton *)buttonWithTitle:(NSString *)title titleColor:(UIColor *)titleColor tag:(NSUInteger)tag target:(id)target sel:(SEL)sel fontSize:(CGFloat)fontSize {
+    return [self buttonWithTitle:title titleColor:titleColor backgroundColor:[UIColor clearColor] tag:tag target:target sel:sel fontSize:fontSize];
+}
+
 + (UIButton *)buttonWithTitle:(NSString *)title backgroundColor:(UIColor *)backgroundColor tag:(NSUInteger)tag  target:(id)target sel:(SEL)sel fontSize:(CGFloat)fontSize {
     return [self buttonWithTitle:title titleColor:nil backgroundColor:backgroundColor tag:tag target:target sel:sel fontSize:fontSize];
 }

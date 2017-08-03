@@ -64,7 +64,7 @@ NS_ASSUME_NONNULL_BEGIN
 /*!
  *  设置当前屏幕的方向, 来呈现不同的视图位置或者动画
  */
-@property (nonatomic, assign, readwrite) UIDeviceOrientation orientation;
+@property (nonatomic, assign, readwrite) UIDeviceOrientation recordingOrientation;
 
 
 @end
@@ -73,6 +73,11 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol SJRecordControlAreaViewDelegate <NSObject>
 
 @optional
+- (void)areaView:(SJRecordControlAreaView *)view clickedBtnTag:(SJRecordControlAreaViewBtnTag)tag;
+
+- (void)arrivedMinDurationAreaView:(SJRecordControlAreaView *)view;
+
+- (void)arrivedMaxDurationAreaView:(SJRecordControlAreaView *)view;
 
 @end
 

@@ -77,10 +77,121 @@
     [self _SJRecordControlAreaViewRemoveObservers];
 }
 
+// MARK: Setter
+
+- (void)setIsRecording:(BOOL)isRecording {
+    _isRecording = isRecording;
+   
+    // 开始录制
+    if ( _isRecording ) {
+        NSLog(@"开始录制");
+        [self.observeTimer fire];
+    }
+    // 结束录制
+    else {
+        NSLog(@"结束录制");
+        [_observeTimer invalidate];
+        _observeTimer = nil;
+    }
+
+    self.recordBtn.selected = isRecording;
+}
+
+- (void)setRecordingOrientation:(UIDeviceOrientation)recordingOrientation {
+    _recordingOrientation = recordingOrientation;
+    CGAffineTransform transform = CGAffineTransformIdentity;
+    
+    switch (_recordingOrientation) {
+        case UIDeviceOrientationFaceUp: {
+            //            NSLog(@"屏幕朝上平躺");
+        }
+            break;
+            
+        case UIDeviceOrientationFaceDown: {
+            //            NSLog(@"屏幕朝下平躺");
+        }
+            break;
+            
+        case UIDeviceOrientationUnknown: {
+            //            NSLog(@"未知方向");
+        }
+            break;
+            
+        case UIDeviceOrientationLandscapeLeft: {
+            //            NSLog(@"屏幕向左横置");
+            [_durationLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.centerX.equalTo(self.mas_trailing).offset(-12);
+                make.centerY.equalTo(self);
+            }];
+            [_selectRecordTimeView mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.width.equalTo(self);
+                make.centerY.equalTo(self);
+                make.centerX.equalTo(self.mas_leading).offset(35/2 + 8);
+                make.height.offset(35);
+            }];
+            transform = CGAffineTransformMakeRotation(M_PI_2);
+        }
+            break;
+            
+        case UIDeviceOrientationLandscapeRight: {
+            //            NSLog(@"屏幕向右橫置");
+            [_durationLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.centerX.equalTo(self.mas_leading).offset(12);
+                make.centerY.equalTo(self);
+            }];
+            [_selectRecordTimeView mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.width.equalTo(self);
+                make.centerY.equalTo(self);
+                make.centerX.equalTo(self.mas_trailing).offset(-(35/2 + 8));
+                make.height.offset(35);
+            }];
+            transform = CGAffineTransformMakeRotation(-M_PI_2);
+        }
+            break;
+            
+        case UIDeviceOrientationPortrait: {
+            //            NSLog(@"屏幕直立");
+            [_durationLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.centerX.equalTo(self);
+                make.top.equalTo(_durationProgressView.mas_bottom).offset(4);
+            }];
+            [_selectRecordTimeView mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.bottom.offset(0);
+                make.width.equalTo(self);
+                make.centerX.equalTo(self);
+                make.height.offset(35);
+            }];
+            transform = CGAffineTransformIdentity;
+        }
+            break;
+            
+        case UIDeviceOrientationPortraitUpsideDown: {
+            //            NSLog(@"屏幕直立，上下顛倒");
+        }
+            break;
+            
+        default: {
+            //            NSLog(@"无法辨识");
+        }
+            break;
+    }
+    [UIView animateWithDuration:0.25 animations:^{
+        _durationLabel.transform = transform;
+        _selectRecordTimeView.transform = transform;
+        _localVideoBtn.transform = transform;
+        _completeBtn.transform = transform;
+    }];
+    [UIView animateWithDuration:0.25 animations:^{
+        [self layoutIfNeeded];
+    }];
+}
+
+
 // MARK: Actions
 
 - (void)clickedBtn:(UIButton *)btn {
-    NSLog(@"clicked btn");
+    if ( ![self.delegate respondsToSelector:@selector(areaView:clickedBtnTag:)] ) return;
+    [self.delegate areaView:self clickedBtnTag:btn.tag];
 }
 
 // MARK: Public
@@ -238,7 +349,10 @@
     void(^exeBlock)() = ^{
         __strong typeof(_self) self = _self;
         if ( !self ) return;
-        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            _self.recordedDuration += 1;
+        });
+
     };
     _observeTimer = [NSTimer sj_scheduledTimerWithTimeInterval:1 exeBlock:exeBlock repeats:YES];
     return _observeTimer;
@@ -263,29 +377,54 @@
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
     if ( [keyPath isEqualToString:@"recordedDuration"] ) {
-        if ( 0 == _recordedDuration ) {
-            
-            _completeBtn.enabled = ( _recordedDuration >= _minDuration );
-            
-            BOOL isRecordingOrPaused = ( 0 != _recordedDuration );
-            CGFloat localAlpha = 0.001;
-            CGFloat completeOrDeleteAlpha = 0.001;
-            if ( isRecordingOrPaused ) {
-                localAlpha = 0.001;
-                completeOrDeleteAlpha = 1;
-            }
-            else {
-                localAlpha = 1;
-                completeOrDeleteAlpha = 0.001;
-            }
-            
-            [UIView animateWithDuration:0.25 animations:^{
-                _localVideoBtn.alpha = localAlpha;
-                _completeBtn.alpha = completeOrDeleteAlpha;
-                _deleteBtn.alpha = completeOrDeleteAlpha;
-            }];
+        
+        _completeBtn.enabled = ( _recordedDuration >= _minDuration );
+        
+        BOOL isRecordingOrPaused = ( 0 != _recordedDuration );
+        CGFloat localAlpha = 0.001;
+        CGFloat completeOrDeleteAlpha = 0.001;
+        if ( isRecordingOrPaused ) {
+            localAlpha = 0.001;
+            completeOrDeleteAlpha = 1;
         }
+        else {
+            localAlpha = 1;
+            completeOrDeleteAlpha = 0.001;
+        }
+        
+        [UIView animateWithDuration:0.25 animations:^{
+            _localVideoBtn.alpha = localAlpha;
+            _completeBtn.alpha = completeOrDeleteAlpha;
+            _deleteBtn.alpha = completeOrDeleteAlpha;
+        }];
+        
+        // time
+        NSDate *date = [NSDate dateWithTimeIntervalSince1970:self.recordedDuration];
+        
+        self.durationLabel.text = [self.formatter stringFromDate:date];
+        [self.durationProgressView setProgress:(self.recordedDuration * 1.0) / self.maxDuration animated:YES];
+        if ( self.recordedDuration == self.minDuration - 5 ) {
+            if ( [self.delegate respondsToSelector:@selector(arrivedMinDurationAreaView:)] ) {
+                [self.delegate arrivedMinDurationAreaView:self];
+            }
+        }
+        if ( self.recordedDuration == self.maxDuration ) {
+            if ( [self.delegate respondsToSelector:@selector(arrivedMaxDurationAreaView:)] ) {
+                [self.delegate arrivedMaxDurationAreaView:self];
+            }
+            [_observeTimer invalidate];
+            _observeTimer = nil;
+        }
+
     }
+}
+
+- (NSDateFormatter *)formatter {
+    NSDateFormatter *formatter = objc_getAssociatedObject(self, _cmd);
+    if ( formatter ) return formatter;
+    formatter = [[NSDateFormatter alloc] init];
+    formatter.dateFormat = @"mm:ss";
+    return formatter;
 }
 
 @end

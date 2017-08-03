@@ -21,6 +21,7 @@
 		77BF9EB71F331DD4008A4735 /* NSTimer+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BF9EB61F331DD4008A4735 /* NSTimer+Extension.m */; };
 		77BF9EC01F3321C1008A4735 /* SJSelectRecordTimeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BF9EBF1F3321C1008A4735 /* SJSelectRecordTimeView.m */; };
 		77BF9EC31F3326AB008A4735 /* SJRecordNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BF9EC21F3326AB008A4735 /* SJRecordNavigationController.m */; };
+		77BF9ED01F334254008A4735 /* SJViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BF9ECF1F334254008A4735 /* SJViewController.m */; };
 		B0C482B4C68FF235FA94D27B /* libPods-SJRecordVideo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C06A814406A9E81060980631 /* libPods-SJRecordVideo.a */; };
 /* End PBXBuildFile section */
 
@@ -53,6 +54,9 @@
 		77BF9EBF1F3321C1008A4735 /* SJSelectRecordTimeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SJSelectRecordTimeView.m; sourceTree = "<group>"; };
 		77BF9EC11F3326AB008A4735 /* SJRecordNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SJRecordNavigationController.h; sourceTree = "<group>"; };
 		77BF9EC21F3326AB008A4735 /* SJRecordNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SJRecordNavigationController.m; sourceTree = "<group>"; };
+		77BF9EC91F333E5D008A4735 /* SJRecordVideoEnumHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SJRecordVideoEnumHeader.h; sourceTree = "<group>"; };
+		77BF9ECE1F334254008A4735 /* SJViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SJViewController.h; sourceTree = "<group>"; };
+		77BF9ECF1F334254008A4735 /* SJViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SJViewController.m; sourceTree = "<group>"; };
 		962D501CD75708C1E48142E8 /* Pods-SJRecordVideo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SJRecordVideo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SJRecordVideo/Pods-SJRecordVideo.debug.xcconfig"; sourceTree = "<group>"; };
 		C06A814406A9E81060980631 /* libPods-SJRecordVideo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SJRecordVideo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC5BA3934B449C0167784770 /* Pods-SJRecordVideo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SJRecordVideo.release.xcconfig"; path = "Pods/Target Support Files/Pods-SJRecordVideo/Pods-SJRecordVideo.release.xcconfig"; sourceTree = "<group>"; };
@@ -114,6 +118,8 @@
 			isa = PBXGroup;
 			children = (
 				77BF9EB21F331BE5008A4735 /* SJRecordVideoHeader.h */,
+				77BF9ECE1F334254008A4735 /* SJViewController.h */,
+				77BF9ECF1F334254008A4735 /* SJViewController.m */,
 				77BF9E8C1F330684008A4735 /* 功能 */,
 				77BF9E8F1F330684008A4735 /* 模型 */,
 				77BF9E911F330694008A4735 /* 服务 */,
@@ -127,6 +133,7 @@
 			isa = PBXGroup;
 			children = (
 				77BF9E921F3306BC008A4735 /* 录制 */,
+				77BF9ECA1F333EE7008A4735 /* 编辑发布 */,
 				77BF9EAA1F330A04008A4735 /* Category */,
 			);
 			name = "功能";
@@ -156,6 +163,7 @@
 		77BF9E921F3306BC008A4735 /* 录制 */ = {
 			isa = PBXGroup;
 			children = (
+				77BF9EC81F333E3A008A4735 /* Other */,
 				77BF9E931F3306BC008A4735 /* Controller */,
 				77BF9E941F3306BC008A4735 /* View */,
 			);
@@ -206,6 +214,46 @@
 			);
 			name = "图片资源";
 			path = Assets;
+			sourceTree = "<group>";
+		};
+		77BF9EC81F333E3A008A4735 /* Other */ = {
+			isa = PBXGroup;
+			children = (
+				77BF9EC91F333E5D008A4735 /* SJRecordVideoEnumHeader.h */,
+			);
+			path = Other;
+			sourceTree = "<group>";
+		};
+		77BF9ECA1F333EE7008A4735 /* 编辑发布 */ = {
+			isa = PBXGroup;
+			children = (
+				77BF9ECB1F333EE7008A4735 /* Controller */,
+				77BF9ECC1F333EE7008A4735 /* Model */,
+				77BF9ECD1F333EE7008A4735 /* Video */,
+			);
+			name = "编辑发布";
+			path = Editing;
+			sourceTree = "<group>";
+		};
+		77BF9ECB1F333EE7008A4735 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		77BF9ECC1F333EE7008A4735 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		77BF9ECD1F333EE7008A4735 /* Video */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Video;
 			sourceTree = "<group>";
 		};
 		F0DD29317491AB2EEDDD159F /* Pods */ = {
@@ -350,6 +398,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				77BF9EAD1F330A10008A4735 /* UIView+Extension.m in Sources */,
+				77BF9ED01F334254008A4735 /* SJViewController.m in Sources */,
 				77BF9EC01F3321C1008A4735 /* SJSelectRecordTimeView.m in Sources */,
 				77BF9E971F3306E1008A4735 /* SJRecordVideoSession.m in Sources */,
 				77BF9E9A1F3306F2008A4735 /* AVAsset+Extension.m in Sources */,
@@ -476,6 +525,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = DB5B5F2RH5;
 				INFOPLIST_FILE = SJRecordVideo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.SanJiang.SJRecordVideo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -491,6 +541,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = DB5B5F2RH5;
 				INFOPLIST_FILE = SJRecordVideo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.SanJiang.SJRecordVideo;
 				PRODUCT_NAME = "$(TARGET_NAME)";

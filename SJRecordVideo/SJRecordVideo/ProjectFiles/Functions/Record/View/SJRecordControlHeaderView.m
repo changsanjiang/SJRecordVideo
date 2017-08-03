@@ -35,10 +35,98 @@
     return self;
 }
 
+// MARK: Setter
+
+- (void)setTorchSwitch:(BOOL)torchSwitch {
+    _torchSwitch = torchSwitch;
+    _torchBtn.selected = torchSwitch;
+}
+
+- (void)setHiddenTorch:(BOOL)hiddenTorch {
+    _hiddenTorch = hiddenTorch;
+    CGFloat alpha = 0.001;
+    if ( _hiddenTorch ) alpha = 0.001;
+    else alpha = 1;
+    [UIView animateWithDuration:0.25 animations:^{
+        self.torchBtn.alpha = alpha;
+    }];
+}
+
+- (void)setIsRecording:(BOOL)isRecording {
+    _isRecording = isRecording;
+
+    CGFloat alpha = 0.001;
+    if ( _isRecording ) alpha = 0.001;
+    else alpha = 1;
+    
+    [UIView animateWithDuration:0.25 animations:^{
+        self.captureDirectionBtn.alpha = alpha;
+        self.torchBtn.alpha = alpha;
+    }];
+}
+
+- (void)setRecordingOrientation:(UIDeviceOrientation)recordingOrientation {
+    _recordingOrientation = recordingOrientation;
+    CGAffineTransform transform = CGAffineTransformIdentity;
+    switch (recordingOrientation) {
+        case UIDeviceOrientationFaceUp: {
+            //            NSLog(@"屏幕朝上平躺");
+        }
+            break;
+            
+        case UIDeviceOrientationFaceDown: {
+            //            NSLog(@"屏幕朝下平躺");
+        }
+            break;
+            
+        case UIDeviceOrientationUnknown: {
+            //            NSLog(@"未知方向");
+        }
+            break;
+            
+        case UIDeviceOrientationLandscapeLeft: {
+            //            NSLog(@"屏幕向左横置");
+            transform = CGAffineTransformMakeRotation(M_PI_2);
+        }
+            break;
+            
+        case UIDeviceOrientationLandscapeRight: {
+            //            NSLog(@"屏幕向右橫置");
+            transform = CGAffineTransformMakeRotation(-M_PI_2);
+        }
+            break;
+            
+        case UIDeviceOrientationPortrait: {
+            //            NSLog(@"屏幕直立");
+            transform = CGAffineTransformIdentity;
+        }
+            break;
+            
+        case UIDeviceOrientationPortraitUpsideDown: {
+            //            NSLog(@"屏幕直立，上下顛倒");
+        }
+            break;
+            
+        default: {
+            //            NSLog(@"无法辨识");
+        }
+            break;
+    }
+    [UIView animateWithDuration:0.25 animations:^{
+        self.torchBtn.transform = transform;
+        self.closeBtn.transform = transform;
+        self.captureDirectionBtn.transform = transform;
+    }];
+}
+
+
+
 // MARK: Actions
 
 - (void)clickedBtn:(UIButton *)btn {
-    NSLog(@"clicked btn");
+//    NSLog(@"clicked btn");
+    if ( ![self.delegate respondsToSelector:@selector(headerView:clickedBtnTag:)] ) return;
+    [self.delegate headerView:self clickedBtnTag:btn.tag];
 }
 
 // MARK: UI

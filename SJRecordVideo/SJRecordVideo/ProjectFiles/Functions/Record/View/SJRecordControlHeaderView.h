@@ -14,6 +14,28 @@ typedef NS_ENUM(NSUInteger, SJRecordControlHeaderViewBtnTag) {
     SJRecordControlHeaderViewBtnTagCaptureDirection,
 };
 
+@protocol SJRecordControlHeaderViewDelegeta;
+
+
+
 @interface SJRecordControlHeaderView : UIView
+
+@property (nonatomic, weak,   readwrite) id <SJRecordControlHeaderViewDelegeta> delegate;
+
+@property (nonatomic, assign, readwrite) UIDeviceOrientation recordingOrientation;
+
+@property (nonatomic, assign, readwrite) BOOL isRecording;
+
+@property (nonatomic, assign, readwrite) BOOL torchSwitch;
+
+@property (nonatomic, assign, readwrite) BOOL hiddenTorch;
+
+@end
+
+
+
+@protocol SJRecordControlHeaderViewDelegeta <NSObject>
+
+- (void)headerView:(SJRecordControlHeaderView *)view clickedBtnTag:(SJRecordControlHeaderViewBtnTag)tag;
 
 @end

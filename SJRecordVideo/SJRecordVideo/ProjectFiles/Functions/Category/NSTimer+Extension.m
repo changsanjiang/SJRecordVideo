@@ -12,7 +12,7 @@
 
 + (instancetype)sj_scheduledTimerWithTimeInterval:(NSTimeInterval)ti exeBlock:(void(^)())block repeats:(BOOL)yesOrNo {
     NSAssert(block, @"block 不可为空");
-    return [self scheduledTimerWithTimeInterval:ti target:self selector:@selector(sj_exeTimerEvent:) userInfo:@{@"block":block} repeats:yesOrNo];
+    return [self scheduledTimerWithTimeInterval:ti target:self selector:@selector(sj_exeTimerEvent:) userInfo:[block copy] repeats:yesOrNo];
 }
 
 + (void)sj_exeTimerEvent:(NSTimer *)timer {
