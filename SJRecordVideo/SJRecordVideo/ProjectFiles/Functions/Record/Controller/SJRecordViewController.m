@@ -428,4 +428,8 @@
     [SVProgressHUD showProgress:progress status:@"正在导出.."];
 }
 
+- (void)cancelExportWithSession:(SJRecordVideoSession *)session {
+    [SVProgressHUD dismiss];
+}
+
 @end

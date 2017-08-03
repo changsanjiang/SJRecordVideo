@@ -42,6 +42,7 @@ static NSString * const SJLocalPreviewCollectionViewCellID = @"SJLocalPreviewCol
 
 @synthesize collectionView = _collectionView;
 
+// MARK: 生命周期
 
 - (instancetype)initWithSession:(SJRecordVideoSession *)session {
     self = [super init];
@@ -92,6 +93,10 @@ static NSString * const SJLocalPreviewCollectionViewCellID = @"SJLocalPreviewCol
     }];
     
     // Do any additional setup after loading the view.
+}
+
+- (void)dealloc {
+    [self.session cancelExport];
 }
 
 // MARK: UI

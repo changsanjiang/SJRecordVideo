@@ -38,6 +38,10 @@ extern NSNotificationName const ThumbnailNotification;
 
 - (void)session:(SJRecordVideoSession *)session exportProgress:(CGFloat)progress;
 
+/*!
+ *  导出被取消
+ */
+- (void)cancelExportWithSession:(SJRecordVideoSession *)session;
 @end
 
 
@@ -54,6 +58,11 @@ extern NSNotificationName const ThumbnailNotification;
  *  @parma  diraction   1 is Portrait, 0 is Landscape.
  */
 - (void)exportAssets:(AVAsset *)asset maxDuration:(NSInteger)duration direction:(short)direction completionHandle:(void(^)(AVAsset *sandBoxAsset, UIImage *previewImage))block;
+
+/*!
+ *  cancelExport
+ */
+- (void)cancelExport;
 
 @end
 

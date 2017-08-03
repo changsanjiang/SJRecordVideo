@@ -366,6 +366,15 @@
     }];
 }
 
+/*!
+ *  cancelExport
+ */
+- (void)cancelExport {
+    [self.stoppedExportSession cancelExport];
+    if ( ![self.delegate respondsToSelector:@selector(cancelExportWithSession:)] ) return;
+    [self.delegate cancelExportWithSession:self];
+}
+
 @end
 
 
