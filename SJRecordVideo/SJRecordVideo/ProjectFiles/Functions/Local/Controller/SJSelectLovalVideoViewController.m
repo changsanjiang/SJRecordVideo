@@ -55,29 +55,40 @@ static NSString * const SJLocalPreviewCollectionViewCellID = @"SJLocalPreviewCol
     
     [self _SJSelectLovalVideoViewControllerSetupUI];
     
-    PHFetchResult<PHAsset *> *assets = [PHAsset fetchAssetsWithMediaType:PHAssetMediaTypeVideo options:nil];
-    PHImageRequestOptions *option = [[PHImageRequestOptions alloc] init];
-    option.resizeMode = PHImageRequestOptionsResizeModeFast;
-    option.networkAccessAllowed = YES;
-    NSMutableArray <SJLoalSelectVideoModel *> *imagesM = [NSMutableArray new];
-    __weak typeof(self) _self = self;
-    [assets enumerateObjectsUsingBlock:^(PHAsset * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        [[PHCachingImageManager defaultManager] requestImageForAsset:obj targetSize:CGSizeMake([UIScreen mainScreen].bounds.size.width / 2, [UIScreen mainScreen].bounds.size.width / 2) contentMode:PHImageContentModeAspectFill options:option resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
-            if ( ![info[@"PHImageResultIsDegradedKey"] boolValue] ) {
-                SJLoalSelectVideoModel *model = [SJLoalSelectVideoModel new];
-                model.previewImgae = result;
-                model.duration = obj.duration;
-                model.asset = obj;
-                model.direction = obj.pixelWidth < obj.pixelHeight ? SJScreenOrientationPortrait : SJScreenOrientationLandscape;
-                [imagesM addObject:model];
-                if ( imagesM.count != assets.count ) return;
-                _self.models = imagesM.copy;
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [_self.collectionView reloadData];
-                });
-                
+    
+    [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
+        switch (status) {
+            case PHAuthorizationStatusAuthorized: {
+                PHFetchResult<PHAsset *> *assets = [PHAsset fetchAssetsWithMediaType:PHAssetMediaTypeVideo options:nil];
+                PHImageRequestOptions *option = [[PHImageRequestOptions alloc] init];
+                option.resizeMode = PHImageRequestOptionsResizeModeFast;
+                option.networkAccessAllowed = YES;
+                NSMutableArray <SJLoalSelectVideoModel *> *imagesM = [NSMutableArray new];
+                __weak typeof(self) _self = self;
+                [assets enumerateObjectsUsingBlock:^(PHAsset * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    [[PHCachingImageManager defaultManager] requestImageForAsset:obj targetSize:CGSizeMake([UIScreen mainScreen].bounds.size.width / 2, [UIScreen mainScreen].bounds.size.width / 2) contentMode:PHImageContentModeAspectFill options:option resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
+                        if ( ![info[@"PHImageResultIsDegradedKey"] boolValue] ) {
+                            SJLoalSelectVideoModel *model = [SJLoalSelectVideoModel new];
+                            model.previewImgae = result;
+                            model.duration = obj.duration;
+                            model.asset = obj;
+                            model.direction = obj.pixelWidth < obj.pixelHeight ? SJScreenOrientationPortrait : SJScreenOrientationLandscape;
+                            [imagesM addObject:model];
+                            if ( imagesM.count != assets.count ) return;
+                            _self.models = imagesM.copy;
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                [_self.collectionView reloadData];
+                            });
+                            
+                        }
+                    }];
+                }];
             }
-        }];
+                break;
+                
+            default:
+                break;
+        }
     }];
     
     // Do any additional setup after loading the view.
