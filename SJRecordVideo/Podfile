@@ -8,5 +8,5 @@ target 'SJRecordVideo' do
   # Pods for SJRecordVideo
 
   pod 'Masonry'
-
+  pod 'SVProgressHUD'
 end

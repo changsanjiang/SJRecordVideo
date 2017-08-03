@@ -14,6 +14,8 @@
 
 #import "SJRecordNavigationController.h"
 
+#import <SVProgressHUD.h>
+
 @interface SJViewController ()
 
 @property (nonatomic, strong, readonly) UIButton *centerBtn;
@@ -37,9 +39,11 @@
 - (void)clcikedBtn:(UIButton *)btn {
     SJRecordViewController *vc = [SJRecordViewController new];
     
+    [SVProgressHUD showWithStatus:@"正在开启.."];
     SJRecordNavigationController *nav = [[SJRecordNavigationController alloc] initWithRootViewController:vc];
-
-    [self presentViewController:nav animated:YES completion:nil];
+    [self presentViewController:nav animated:YES completion:^{
+        [SVProgressHUD dismiss];
+    }];
 }
 
 // MARK: UI

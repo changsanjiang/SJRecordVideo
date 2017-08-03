@@ -273,7 +273,10 @@
     self.stoppedExportSession.outputURL = exportURL;
     self.stoppedExportSession.outputFileType = AVFileTypeMPEG4;
     
-    [self.exportProgressTimer fire];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.exportProgressTimer fire];
+    });
+
     __weak typeof(self) _self = self;
     [self.stoppedExportSession exportAsynchronouslyWithCompletionHandler:^{
         NSLog(@"导出完成");
@@ -284,11 +287,13 @@
             AVAsset *asset = [AVAsset assetWithURL:exportURL];
             asset.assetURL = exportURL;
             dispatch_async(dispatch_get_main_queue(), ^{
+                // 删除定时器
+                [_exportProgressTimer invalidate];
+                _exportProgressTimer = nil;
                 if ( block ) block(asset, image);
+                if ( ![_self.delegate respondsToSelector:@selector(session:exportProgress:)] ) return;
+                [_self.delegate session:_self exportProgress:_self.stoppedExportSession.progress];
             });
-            // 删除定时器
-            [_exportProgressTimer invalidate];
-            _exportProgressTimer = nil;
         }];
     }];
 }
@@ -338,7 +343,10 @@
     self.stoppedExportSession.outputURL = exportURL;
     self.stoppedExportSession.outputFileType = AVFileTypeMPEG4;
     
-    [self.exportProgressTimer fire];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.exportProgressTimer fire];
+    });
+
     __weak typeof(self) _self = self;
     [self.stoppedExportSession exportAsynchronouslyWithCompletionHandler:^{
         NSLog(@"导出完成");
@@ -350,10 +358,10 @@
             asset.assetURL = exportURL;
             dispatch_async(dispatch_get_main_queue(), ^{
                 if ( block ) block(asset, image);
+                // 删除定时器
+                [_exportProgressTimer invalidate];
+                _exportProgressTimer = nil;
             });
-            // 删除定时器
-            [_exportProgressTimer invalidate];
-            _exportProgressTimer = nil;
         }];
     }];
 }

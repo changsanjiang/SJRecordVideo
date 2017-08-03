@@ -14,11 +14,13 @@
 
 #import <Masonry.h>
 
+#import <AVKit/AVKit.h>
+
 @interface SJVideoInfoEditingViewController ()
 
 @property (nonatomic, strong, readwrite) AVAsset *asset;
-@property (nonatomic, strong, readwrite) MPMoviePlayerViewController *playerVC;
 @property (nonatomic, assign, readwrite) SJScreenOrientation direction;
+@property (nonatomic, strong, readwrite) AVPlayerViewController *avPlayerVC;
 
 @end
 
@@ -47,27 +49,33 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    [self.playerVC.moviePlayer pause];
+    [self.avPlayerVC.player pause];
 }
 
 // MARK: UI
 
 - (void)_SJVideoInfoEditingViewControllerSetupUI {
     
-    self.title = @"编辑短视频";
+    self.title = @"发布短视频";
     self.view.backgroundColor = [UIColor whiteColor];
     
-    self.playerVC = [[MPMoviePlayerViewController alloc] initWithContentURL:self.asset.assetURL];
+    self.avPlayerVC = [AVPlayerViewController new];
+    AVPlayerItem *item = [AVPlayerItem playerItemWithAsset:self.asset];
+    self.avPlayerVC.player = [AVPlayer playerWithPlayerItem:item];
+    [self.view addSubview:self.avPlayerVC.view];
+
+    [self.avPlayerVC.player play];
     
-    [[self.playerVC moviePlayer] prepareToPlay];
-    [[self.playerVC moviePlayer] play];
-    
-    self.playerVC.moviePlayer.controlStyle = MPMovieControlStyleEmbedded;
-    [self.view addSubview:self.playerVC.view];
-    
-    [self.playerVC.view mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.avPlayerVC.view mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_offset(UIEdgeInsetsMake(8, 8, 8, 8));
     }];
+    
+}
+
+// MARK: Status bar
+
+- (UIStatusBarStyle)preferredStatusBarStyle {
+    return UIStatusBarStyleLightContent;
 }
 
 @end

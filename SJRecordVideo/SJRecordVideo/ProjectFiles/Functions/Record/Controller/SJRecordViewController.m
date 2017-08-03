@@ -16,6 +16,7 @@
 
 #import "SJRecordVideoSession.h"
 
+#import <SVProgressHUD.h>
 
 // MARK: 通知处理
 
@@ -92,12 +93,12 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [self.navigationController setNavigationBarHidden:YES];
+    [self.navigationController setNavigationBarHidden:YES animated:YES];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    [self.navigationController setNavigationBarHidden:NO];
+    [self.navigationController setNavigationBarHidden:NO animated:YES];
 }
 
 - (void)dealloc {
@@ -162,8 +163,8 @@
 
 // MARK: Status bar
 
-- (BOOL)prefersStatusBarHidden {
-    return YES;
+- (UIStatusBarStyle)preferredStatusBarStyle {
+    return UIStatusBarStyleLightContent;
 }
 
 // MARK: Lazy
@@ -223,7 +224,6 @@
             // stop
             if ( self.areaView.recordedDuration >= self.areaView.minDuration ) {
                 __weak typeof(self) _self = self;
-                self.isRecording = NO;
                 self.areaView.enableRecordBtn = NO;
                 [self.session stopRecordingAndComplate:^(AVAsset *asset, UIImage *coverImage) {
                     SJScreenOrientation direction = SJScreenOrientationLandscape;
@@ -235,6 +235,7 @@
                     [_self.navigationController pushViewController:vc animated:YES];
                     [_self.areaView resetDuration];
                     _self.areaView.enableRecordBtn = YES;
+                    _self.isRecording = NO;
                 }];
             }
         }
@@ -283,6 +284,8 @@
             if ( [self.session switchCameras] ) {
                 self.isRecording = NO;
                 [self.areaView resetDuration];
+                [self.session.previewLayer removeFromSuperlayer];
+                [self.view.layer insertSublayer:self.session.previewLayer atIndex:0];
             }
         }
             break;
@@ -421,6 +424,8 @@
 
 - (void)session:(SJRecordVideoSession *)session exportProgress:(CGFloat)progress {
     NSLog(@"exportProgress: %f", progress);
+    if ( progress == 1 ) {[SVProgressHUD dismiss]; return;}
+    [SVProgressHUD showProgress:progress status:@"正在导出.."];
 }
 
 @end
