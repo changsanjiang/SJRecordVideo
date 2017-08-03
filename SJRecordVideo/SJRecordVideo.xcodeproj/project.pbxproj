@@ -14,13 +14,11 @@
 		77BF9E971F3306E1008A4735 /* SJRecordVideoSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BF9E961F3306E1008A4735 /* SJRecordVideoSession.m */; };
 		77BF9E9A1F3306F2008A4735 /* AVAsset+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BF9E991F3306F2008A4735 /* AVAsset+Extension.m */; };
 		77BF9E9D1F330752008A4735 /* SJRecordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BF9E9C1F330752008A4735 /* SJRecordViewController.m */; };
-		77BF9EA01F3307FA008A4735 /* SJRecordControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BF9E9F1F3307FA008A4735 /* SJRecordControlView.m */; };
 		77BF9EA61F33085C008A4735 /* SJRecordControlAreaView.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BF9EA51F33085C008A4735 /* SJRecordControlAreaView.m */; };
 		77BF9EA91F33088F008A4735 /* SJRecordControlHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BF9EA81F33088F008A4735 /* SJRecordControlHeaderView.m */; };
 		77BF9EAD1F330A10008A4735 /* UIView+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BF9EAC1F330A10008A4735 /* UIView+Extension.m */; };
 		77BF9EB01F330C04008A4735 /* SJRecordVideoAssets.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 77BF9EAF1F330C04008A4735 /* SJRecordVideoAssets.bundle */; };
 		77BF9EB71F331DD4008A4735 /* NSTimer+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BF9EB61F331DD4008A4735 /* NSTimer+Extension.m */; };
-		77BF9EBA1F331F2A008A4735 /* DBPublishSelectRecordTimeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BF9EB91F331F2A008A4735 /* DBPublishSelectRecordTimeView.m */; };
 		77BF9EC01F3321C1008A4735 /* SJSelectRecordTimeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BF9EBF1F3321C1008A4735 /* SJSelectRecordTimeView.m */; };
 		77BF9EC31F3326AB008A4735 /* SJRecordNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BF9EC21F3326AB008A4735 /* SJRecordNavigationController.m */; };
 		B0C482B4C68FF235FA94D27B /* libPods-SJRecordVideo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C06A814406A9E81060980631 /* libPods-SJRecordVideo.a */; };
@@ -40,8 +38,6 @@
 		77BF9E991F3306F2008A4735 /* AVAsset+Extension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AVAsset+Extension.m"; sourceTree = "<group>"; };
 		77BF9E9B1F330752008A4735 /* SJRecordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SJRecordViewController.h; sourceTree = "<group>"; };
 		77BF9E9C1F330752008A4735 /* SJRecordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SJRecordViewController.m; sourceTree = "<group>"; };
-		77BF9E9E1F3307FA008A4735 /* SJRecordControlView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SJRecordControlView.h; sourceTree = "<group>"; };
-		77BF9E9F1F3307FA008A4735 /* SJRecordControlView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SJRecordControlView.m; sourceTree = "<group>"; };
 		77BF9EA41F33085C008A4735 /* SJRecordControlAreaView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SJRecordControlAreaView.h; sourceTree = "<group>"; };
 		77BF9EA51F33085C008A4735 /* SJRecordControlAreaView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SJRecordControlAreaView.m; sourceTree = "<group>"; };
 		77BF9EA71F33088F008A4735 /* SJRecordControlHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SJRecordControlHeaderView.h; sourceTree = "<group>"; };
@@ -53,8 +49,6 @@
 		77BF9EB41F331C94008A4735 /* SJRecordVideoSource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SJRecordVideoSource.h; sourceTree = "<group>"; };
 		77BF9EB51F331DD4008A4735 /* NSTimer+Extension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSTimer+Extension.h"; sourceTree = "<group>"; };
 		77BF9EB61F331DD4008A4735 /* NSTimer+Extension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSTimer+Extension.m"; sourceTree = "<group>"; };
-		77BF9EB81F331F2A008A4735 /* DBPublishSelectRecordTimeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DBPublishSelectRecordTimeView.h; sourceTree = "<group>"; };
-		77BF9EB91F331F2A008A4735 /* DBPublishSelectRecordTimeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DBPublishSelectRecordTimeView.m; sourceTree = "<group>"; };
 		77BF9EBE1F3321C1008A4735 /* SJSelectRecordTimeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SJSelectRecordTimeView.h; sourceTree = "<group>"; };
 		77BF9EBF1F3321C1008A4735 /* SJSelectRecordTimeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SJSelectRecordTimeView.m; sourceTree = "<group>"; };
 		77BF9EC11F3326AB008A4735 /* SJRecordNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SJRecordNavigationController.h; sourceTree = "<group>"; };
@@ -183,16 +177,12 @@
 		77BF9E941F3306BC008A4735 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				77BF9E9E1F3307FA008A4735 /* SJRecordControlView.h */,
-				77BF9E9F1F3307FA008A4735 /* SJRecordControlView.m */,
 				77BF9EA71F33088F008A4735 /* SJRecordControlHeaderView.h */,
 				77BF9EA81F33088F008A4735 /* SJRecordControlHeaderView.m */,
 				77BF9EA41F33085C008A4735 /* SJRecordControlAreaView.h */,
 				77BF9EA51F33085C008A4735 /* SJRecordControlAreaView.m */,
 				77BF9EBE1F3321C1008A4735 /* SJSelectRecordTimeView.h */,
 				77BF9EBF1F3321C1008A4735 /* SJSelectRecordTimeView.m */,
-				77BF9EB81F331F2A008A4735 /* DBPublishSelectRecordTimeView.h */,
-				77BF9EB91F331F2A008A4735 /* DBPublishSelectRecordTimeView.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -363,11 +353,9 @@
 				77BF9EC01F3321C1008A4735 /* SJSelectRecordTimeView.m in Sources */,
 				77BF9E971F3306E1008A4735 /* SJRecordVideoSession.m in Sources */,
 				77BF9E9A1F3306F2008A4735 /* AVAsset+Extension.m in Sources */,
-				77BF9EA01F3307FA008A4735 /* SJRecordControlView.m in Sources */,
 				77BF9E9D1F330752008A4735 /* SJRecordViewController.m in Sources */,
 				77BF9EA61F33085C008A4735 /* SJRecordControlAreaView.m in Sources */,
 				77BF9E791F33045D008A4735 /* AppDelegate.m in Sources */,
-				77BF9EBA1F331F2A008A4735 /* DBPublishSelectRecordTimeView.m in Sources */,
 				77BF9E761F33045D008A4735 /* main.m in Sources */,
 				77BF9EC31F3326AB008A4735 /* SJRecordNavigationController.m in Sources */,
 				77BF9EB71F331DD4008A4735 /* NSTimer+Extension.m in Sources */,

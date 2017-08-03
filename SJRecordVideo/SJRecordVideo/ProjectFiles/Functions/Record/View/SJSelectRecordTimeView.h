@@ -10,14 +10,14 @@
 
 @interface SJSelectRecordTimeView : UIView
 
-@property (nonatomic, copy, readwrite) void(^clickedSecBtnBlock)();
-
-@property (nonatomic, copy, readwrite) void(^clickedMinBtnBlock)();
-
-@property (nonatomic, assign, readwrite) BOOL enableBtn;
+@property (nonatomic, assign, readwrite) BOOL enableBtns;
 
 @property (nonatomic, assign, readwrite) BOOL isRecordingOrPaused;
 
+@property (nonatomic, strong, readwrite) NSString *btn1Title;
+@property (nonatomic, strong, readwrite) NSString *btn2Title;
 
+@property (nonatomic, copy, readwrite) void(^clickedBtn1Block)();
+@property (nonatomic, copy, readwrite) void(^clickedBtn2Block)();
 
 @end

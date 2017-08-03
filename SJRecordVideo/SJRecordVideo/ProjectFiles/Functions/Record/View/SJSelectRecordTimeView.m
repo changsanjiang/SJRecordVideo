@@ -15,16 +15,16 @@
 @interface SJSelectRecordTimeView ()
 
 @property (nonatomic, strong, readonly) UIView *roundView;
-@property (nonatomic, strong, readonly) UIButton *secBtn;
-@property (nonatomic, strong, readonly) UIButton *minBtn;
+@property (nonatomic, strong, readonly) UIButton *modeBtn1;
+@property (nonatomic, strong, readonly) UIButton *modeBtn2;
 
 @end
 
 @implementation SJSelectRecordTimeView
 
 @synthesize roundView = _roundView;
-@synthesize secBtn = _secBtn;
-@synthesize minBtn = _minBtn;
+@synthesize modeBtn1 = _modeBtn1;
+@synthesize modeBtn2 = _modeBtn2;
 
 
 - (instancetype)initWithFrame:(CGRect)frame {
@@ -36,12 +36,21 @@
 
 // MARK: Setter
 
-- (void)setEnableBtn:(BOOL)enableBtn {
-    _enableBtn = enableBtn;
-    self.secBtn.enabled = enableBtn;
-    self.minBtn.enabled = enableBtn;
+- (void)setEnableBtns:(BOOL)enableBtns {
+    _enableBtns = enableBtns;
+    self.modeBtn1.enabled = enableBtns;
+    self.modeBtn2.enabled = enableBtns;
 }
 
+- (void)setBtn1Title:(NSString *)btn1Title {
+    _btn1Title = btn1Title;
+    [_modeBtn1 setTitle:btn1Title forState:UIControlStateNormal];
+}
+
+- (void)setBtn2Title:(NSString *)btn2Title {
+    _btn2Title = btn2Title;
+    [_modeBtn2 setTitle:btn2Title forState:UIControlStateNormal];
+}
 
 // MARK: Actions
 
@@ -51,30 +60,30 @@
     switch (btn.tag) {
             // 秒
         case 0: {
-            [_secBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
+            [_modeBtn1 mas_remakeConstraints:^(MASConstraintMaker *make) {
                 make.top.bottom.offset(0);
                 make.centerX.equalTo(_roundView);
             }];
             
-            [_minBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
+            [_modeBtn2 mas_remakeConstraints:^(MASConstraintMaker *make) {
                 make.top.bottom.offset(0);
-                make.leading.equalTo(_secBtn.mas_trailing).offset(8);
+                make.leading.equalTo(_modeBtn1.mas_trailing).offset(8);
             }];
-            if ( self.clickedSecBtnBlock ) self.clickedSecBtnBlock();
+            if ( self.clickedBtn1Block ) self.clickedBtn1Block();
         }
             break;
             // 分钟
         case 1: {
-            [_secBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
+            [_modeBtn1 mas_remakeConstraints:^(MASConstraintMaker *make) {
                 make.top.bottom.offset(0);
-                make.trailing.equalTo(_minBtn.mas_leading).offset(-8);
+                make.trailing.equalTo(_modeBtn2.mas_leading).offset(-8);
             }];
             
-            [_minBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
+            [_modeBtn2 mas_remakeConstraints:^(MASConstraintMaker *make) {
                 make.top.bottom.offset(0);
                 make.centerX.equalTo(_roundView);
             }];
-            if ( self.clickedMinBtnBlock ) self.clickedMinBtnBlock();
+            if ( self.clickedBtn2Block ) self.clickedBtn2Block();
         }
             break;
         default:
@@ -95,17 +104,17 @@
         make.size.mas_offset(CGSizeMake(5, 5));
     }];
     
-    [self addSubview:self.secBtn];
-    [self addSubview:self.minBtn];
+    [self addSubview:self.modeBtn1];
+    [self addSubview:self.modeBtn2];
     
-    [_secBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+    [_modeBtn1 mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.bottom.offset(0);
         make.centerX.equalTo(_roundView);
     }];
     
-    [_minBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+    [_modeBtn2 mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.bottom.offset(0);
-        make.leading.equalTo(_secBtn.mas_trailing).offset(8);
+        make.leading.equalTo(_modeBtn1.mas_trailing).offset(8);
     }];
 }
 
@@ -115,28 +124,28 @@
     return _roundView;
 }
 
-- (UIButton *)secBtn {
-    if ( _secBtn ) return _secBtn;
-    _secBtn = [UIButton buttonWithTitle:@"15秒MV"
+- (UIButton *)modeBtn1 {
+    if ( _modeBtn1 ) return _modeBtn1;
+    _modeBtn1 = [UIButton buttonWithTitle:@""
                              titleColor:[UIColor whiteColor]
                         backgroundColor:[UIColor clearColor]
                                     tag:0
                                  target:self
                                     sel:@selector(clickedBtn:)
                                fontSize:14];
-    return _secBtn;
+    return _modeBtn1;
 }
 
-- (UIButton *)minBtn {
-    if ( _minBtn ) return _minBtn;
-    _minBtn = [UIButton buttonWithTitle:@"3分钟"
+- (UIButton *)modeBtn2 {
+    if ( _modeBtn2 ) return _modeBtn2;
+    _modeBtn2 = [UIButton buttonWithTitle:@""
                              titleColor:[UIColor whiteColor]
                         backgroundColor:[UIColor clearColor]
                                     tag:1
                                  target:self
                                     sel:@selector(clickedBtn:)
                                fontSize:14];
-    return _minBtn;
+    return _modeBtn2;
 }
 
 @end

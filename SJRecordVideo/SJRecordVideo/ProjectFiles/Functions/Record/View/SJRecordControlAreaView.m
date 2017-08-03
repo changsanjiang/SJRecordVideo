@@ -10,11 +10,11 @@
 
 #import "NSTimer+Extension.h"
 
-#import "DBPublishSelectRecordTimeView.h"
-
 #import "SJSelectRecordTimeView.h"
 
 #import <Masonry.h>
+
+#import <objc/message.h>
 
 #import "SJRecordVideoSource.h"
 
@@ -67,7 +67,7 @@
     [self _SJRecordControlAreaViewSetupUI];
     self.enableRecordBtn = YES;
     [self _SJRecordControlAreaViewObservers];
-    self.minDuration = 8;
+    self.minDuration = 5;
     self.maxDuration = 15;
     [self updateRecordFlagLocation];
     return self;
@@ -119,6 +119,7 @@
     
     _completeBtn.alpha = 0.001;
     _deleteBtn.alpha = 0.001;
+    _selectRecordTimeView.hidden = YES;
     
     [_durationProgressView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.leading.top.trailing.offset(0);
@@ -285,6 +286,61 @@
             }];
         }
     }
+}
+
+@end
+
+
+
+
+
+@implementation SJRecordControlAreaView (SJSelectTimeMode)
+
+- (void)setShowSelectTimeView:(BOOL)showSelectTimeView {
+    objc_setAssociatedObject(self, @selector(isShowSelectTimeView), @(showSelectTimeView), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    self.selectRecordTimeView.hidden = !showSelectTimeView;
+}
+
+- (BOOL)isShowSelectTimeView {
+    return [objc_getAssociatedObject(self, _cmd) boolValue];
+}
+
+- (void)setSelectTimeTitle1:(NSString *)selectTimeTitle1 {
+    objc_setAssociatedObject(self, @selector(selectTimeTitle1), selectTimeTitle1, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    self.selectRecordTimeView.btn1Title = selectTimeTitle1;
+}
+
+- (NSString *)selectTimeTitle1 {
+    return objc_getAssociatedObject(self, _cmd);
+}
+
+- (void)setSelectTimeTitle2:(NSString *)selectTimeTitle2 {
+    objc_setAssociatedObject(self, @selector(selectTimeTitle2), selectTimeTitle2, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    self.selectRecordTimeView.btn2Title = selectTimeTitle2;
+}
+
+- (NSString *)selectTimeTitle2 {
+    return objc_getAssociatedObject(self, _cmd);
+}
+
+- (void)setExeSelectTime1Block:(void (^)())exeSelectTime1Block {
+    objc_setAssociatedObject(self, @selector(exeSelectTime1Block), exeSelectTime1Block, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    self.selectRecordTimeView.clickedBtn1Block = exeSelectTime1Block;
+
+}
+
+- (void (^)())exeSelectTime1Block {
+    return objc_getAssociatedObject(self, _cmd);
+}
+
+- (void)setExeSelectTime2Block:(void (^)())exeSelectTime2Block {
+    objc_setAssociatedObject(self, @selector(exeSelectTime2Block), exeSelectTime2Block, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    self.selectRecordTimeView.clickedBtn2Block = exeSelectTime2Block;
+
+}
+
+- (void (^)())exeSelectTime2Block {
+    return objc_getAssociatedObject(self, _cmd);
 }
 
 @end

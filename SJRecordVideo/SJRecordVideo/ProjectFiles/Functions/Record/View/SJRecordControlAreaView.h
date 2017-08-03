@@ -19,6 +19,8 @@ typedef NS_ENUM(NSUInteger, SJRecordControlAreaViewBtnTag) {
 @protocol SJRecordControlAreaViewDelegate;
 
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface SJRecordControlAreaView : UIView
 
 @property (nonatomic, weak,   readwrite) id <SJRecordControlAreaViewDelegate> delegate;
@@ -73,3 +75,23 @@ typedef NS_ENUM(NSUInteger, SJRecordControlAreaViewBtnTag) {
 @optional
 
 @end
+
+
+
+
+
+@interface SJRecordControlAreaView (SJSelectTimeMode)
+
+/*!
+ *  default is NO.
+ */
+@property (nonatomic, assign, readwrite, getter=isShowSelectTimeView) BOOL showSelectTimeView;
+@property (nonatomic, strong, readwrite, nullable) NSString *selectTimeTitle1;
+@property (nonatomic, strong, readwrite, nullable) NSString *selectTimeTitle2;
+
+@property (nonatomic, copy, readwrite, nullable) void(^exeSelectTime1Block)();
+@property (nonatomic, copy, readwrite, nullable) void(^exeSelectTime2Block)();
+
+@end
+
+NS_ASSUME_NONNULL_END

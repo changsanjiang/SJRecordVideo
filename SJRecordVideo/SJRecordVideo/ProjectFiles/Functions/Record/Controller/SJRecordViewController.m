@@ -8,19 +8,24 @@
 
 #import "SJRecordViewController.h"
 
-#import "SJRecordControlView.h"
-
 #import <Masonry.h>
+
+#import "SJRecordControlHeaderView.h"
+
+#import "SJRecordControlAreaView.h"
 
 @interface SJRecordViewController ()
 
-@property (nonatomic, strong, readonly) SJRecordControlView *controlView;
+@property (nonatomic, strong, readonly) SJRecordControlHeaderView *headerView;
+
+@property (nonatomic, strong, readonly) SJRecordControlAreaView *areaView;
 
 @end
 
 @implementation SJRecordViewController
 
-@synthesize controlView = _controlView;
+@synthesize headerView = _headerView;
+@synthesize areaView = _areaView;
 
 // MARK: 生命周期
 
@@ -46,17 +51,53 @@
 
 - (void)_SJRecordViewControllerSetupUI {
     
-    [self.view addSubview:self.controlView];
-    [_controlView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.offset(0);
+    [self.view addSubview:self.headerView];
+    [self.view addSubview:self.areaView];
+    
+    [_headerView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.leading.trailing.offset(0);
+        make.height.offset(64);
     }];
+    [_areaView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.leading.bottom.trailing.offset(0);
+        make.height.equalTo(self.view).multipliedBy(0.25);
+    }];
+    
+    
+    
+    // MARK: Mix UI + Block Start target: AreaView
+    _areaView.showSelectTimeView = YES;
+    _areaView.selectTimeTitle1 = @"15秒MV";
+    _areaView.selectTimeTitle2 = @"3分钟";
+    
+    __weak typeof(self) _self = self;
+    _areaView.exeSelectTime1Block = ^{
+        _self.areaView.minDuration = 5;
+        _self.areaView.maxDuration = 15;
+        [_self.areaView updateRecordFlagLocation];
+    };
+    
+    _areaView.exeSelectTime2Block = ^{
+        _self.areaView.maxDuration = 3 * 60;
+        [_self.areaView updateRecordFlagLocation];
+    };
+    // MARK: Mix End
+
 }
 
-- (SJRecordControlView *)controlView {
-    if ( _controlView ) return _controlView;
-    _controlView = [SJRecordControlView new];
-    return _controlView;
+- (SJRecordControlHeaderView *)headerView {
+    if ( _headerView ) return _headerView;
+    _headerView = [SJRecordControlHeaderView new];
+    return _headerView;
 }
+
+- (SJRecordControlAreaView *)areaView {
+    if ( _areaView ) return _areaView;
+    _areaView = [SJRecordControlAreaView new];
+    return _areaView;
+}
+
+// MARK: Status bar
 
 - (BOOL)prefersStatusBarHidden {
     return YES;
