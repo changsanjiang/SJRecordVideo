@@ -276,23 +276,30 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.exportProgressTimer fire];
     });
-
+    
     __weak typeof(self) _self = self;
     [self.stoppedExportSession exportAsynchronouslyWithCompletionHandler:^{
         NSLog(@"导出完成");
         __strong typeof(_self) self = _self;
         if ( !self ) return;
+        if ( self.stoppedExportSession.status == AVAssetExportSessionStatusCancelled ) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                // 删除定时器
+                [_exportProgressTimer invalidate];
+                _exportProgressTimer = nil;
+            });
+            return;
+        }
+        
         [self thumbnailForVideoAtURL:exportURL atTime:kCMTimeZero generatedImage:^(UIImage *image) {
             [self resetKamera_movieFolder];
             AVAsset *asset = [AVAsset assetWithURL:exportURL];
             asset.assetURL = exportURL;
             dispatch_async(dispatch_get_main_queue(), ^{
+                if ( block ) block(asset, image);
                 // 删除定时器
                 [_exportProgressTimer invalidate];
                 _exportProgressTimer = nil;
-                if ( block ) block(asset, image);
-                if ( ![_self.delegate respondsToSelector:@selector(session:exportProgress:)] ) return;
-                [_self.delegate session:_self exportProgress:_self.stoppedExportSession.progress];
             });
         }];
     }];
@@ -339,31 +346,7 @@
         [[NSFileManager defaultManager] removeItemAtURL:exportURL error:nil];
     }
     
-    self.stoppedExportSession = [AVAssetExportSession exportSessionWithAsset:compositionM presetName:AVAssetExportPresetMediumQuality];
-    self.stoppedExportSession.outputURL = exportURL;
-    self.stoppedExportSession.outputFileType = AVFileTypeMPEG4;
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self.exportProgressTimer fire];
-    });
-
-    __weak typeof(self) _self = self;
-    [self.stoppedExportSession exportAsynchronouslyWithCompletionHandler:^{
-        NSLog(@"导出完成");
-        __strong typeof(_self) self = _self;
-        if ( !self ) return;
-        [self thumbnailForVideoAtURL:exportURL atTime:kCMTimeZero generatedImage:^(UIImage *image) {
-            [self resetKamera_movieFolder];
-            AVAsset *asset = [AVAsset assetWithURL:exportURL];
-            asset.assetURL = exportURL;
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if ( block ) block(asset, image);
-                // 删除定时器
-                [_exportProgressTimer invalidate];
-                _exportProgressTimer = nil;
-            });
-        }];
-    }];
+    [self exportAssets:compositionM completionHandle:block];
 }
 
 /*!
