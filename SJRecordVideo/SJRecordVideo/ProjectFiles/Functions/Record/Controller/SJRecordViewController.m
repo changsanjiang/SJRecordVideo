@@ -293,8 +293,6 @@
             if ( [self.session switchCameras] ) {
                 self.isRecording = NO;
                 [self.areaView resetDuration];
-                [self.session.previewLayer removeFromSuperlayer];
-                [self.view.layer insertSublayer:self.session.previewLayer atIndex:0];
             }
         }
             break;
