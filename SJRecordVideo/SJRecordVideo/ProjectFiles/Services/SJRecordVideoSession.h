@@ -66,7 +66,7 @@ extern NSNotificationName const ThumbnailNotification;
  */
 - (void)exportAssets:(AVAsset *)asset maxDuration:(NSInteger)duration direction:(short)direction completionHandle:(void(^)(AVAsset *sandBoxAsset, UIImage *previewImage))block;
 
-- (void)exportAssets:(AVAsset *)asset presetName:(NSString *)presetName maxDuration:(NSInteger)duration direction:(short)direction completionHandle:(void (^)(AVAsset *, UIImage *))block;
+- (void)exportAssets:(AVAsset *)asset presetName:(NSString *)presetName maxDuration:(NSInteger)duration direction:(short)direction completionHandle:(void (^)(AVAsset *sandBoxAsset, UIImage *previewImage))block;
 
 /*!
  *  cancelExport
