@@ -265,11 +265,15 @@
 @implementation SJRecordVideoSession (ExportAssets)
 
 - (void)exportAssets:(AVAsset *)asset completionHandle:(void(^)(AVAsset *sandBoxAsset, UIImage *previewImage))block; {
+    [self exportAssets:asset presetName:AVAssetExportPresetMediumQuality completionHandle:block];
+}
+
+- (void)exportAssets:(AVAsset *)asset presetName:(NSString *)presetName completionHandle:(void(^)(AVAsset *sandBoxAsset, UIImage *previewImage))block {
     NSURL *exportURL = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask].firstObject URLByAppendingPathComponent:@"_re_.mp4"];
     if ( [[NSFileManager defaultManager] fileExistsAtPath:[exportURL.absoluteString substringFromIndex:7]] ) {
         [[NSFileManager defaultManager] removeItemAtURL:exportURL error:nil];
     }
-    self.stoppedExportSession = [AVAssetExportSession exportSessionWithAsset:asset presetName:AVAssetExportPresetMediumQuality];
+    self.stoppedExportSession = [AVAssetExportSession exportSessionWithAsset:asset presetName:presetName];
     self.stoppedExportSession.outputURL = exportURL;
     self.stoppedExportSession.outputFileType = AVFileTypeMPEG4;
     
@@ -309,7 +313,10 @@
  *  @parma  diraction   YES is Portrait, NO is Landscape.
  */
 - (void)exportAssets:(AVAsset *)asset maxDuration:(NSInteger)duration direction:(short)direction completionHandle:(void(^)(AVAsset *sandBoxAsset, UIImage *previewImage))block; {
-    
+    [self exportAssets:asset presetName:AVAssetExportPresetMediumQuality maxDuration:duration direction:direction completionHandle:block];
+}
+
+- (void)exportAssets:(AVAsset *)asset presetName:(NSString *)presetName maxDuration:(NSInteger)duration direction:(short)direction completionHandle:(void (^)(AVAsset *, UIImage *))block {
     NSInteger sourceDuration = asset.duration.value / asset.duration.timescale;
     if ( sourceDuration < duration ) {
         [self exportAssets:asset completionHandle:block];
@@ -321,7 +328,7 @@
     AVMutableCompositionTrack *audioTrackM = [compositionM addMutableTrackWithMediaType:AVMediaTypeAudio preferredTrackID:kCMPersistentTrackID_Invalid];
     AVMutableCompositionTrack *videoTrackM = [compositionM addMutableTrackWithMediaType:AVMediaTypeVideo preferredTrackID:kCMPersistentTrackID_Invalid];
     
-    if ( 1 == direction ) videoTrackM.preferredTransform = CGAffineTransformMakeRotation(M_PI_2);
+    if ( 1 >= direction ) videoTrackM.preferredTransform = CGAffineTransformMakeRotation(M_PI_2);
     
     CMTimeRange cutRange = CMTimeRangeMake(kCMTimeZero, CMTimeMake(duration, 1));
     
@@ -340,7 +347,7 @@
         return;
     }
     
-    [self exportAssets:compositionM completionHandle:block];
+    [self exportAssets:compositionM presetName:presetName completionHandle:block];
 }
 
 /*!

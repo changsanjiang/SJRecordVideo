@@ -157,7 +157,7 @@
 			isa = PBXGroup;
 			children = (
 				77BF9E921F3306BC008A4735 /* 录制 */,
-				77BF9ECA1F333EE7008A4735 /* 编辑 */,
+				77BF9ECA1F333EE7008A4735 /* 填写视频详情 */,
 				77BF9EDD1F334C72008A4735 /* 本地视频 */,
 				77BF9EAA1F330A04008A4735 /* Category */,
 			);
@@ -249,14 +249,14 @@
 			path = Other;
 			sourceTree = "<group>";
 		};
-		77BF9ECA1F333EE7008A4735 /* 编辑 */ = {
+		77BF9ECA1F333EE7008A4735 /* 填写视频详情 */ = {
 			isa = PBXGroup;
 			children = (
 				77BF9ECB1F333EE7008A4735 /* Controller */,
 				77BF9ECD1F333EE7008A4735 /* Video */,
 				77BF9ECC1F333EE7008A4735 /* Model */,
 			);
-			name = "编辑";
+			name = "填写视频详情";
 			path = Editing;
 			sourceTree = "<group>";
 		};

@@ -10,8 +10,6 @@
 
 #import "AVAsset+Extension.h"
 
-#import <MediaPlayer/MediaPlayer.h>
-
 #import <Masonry.h>
 
 #import <AVKit/AVKit.h>

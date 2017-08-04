@@ -169,7 +169,7 @@
     _torchBtn = [UIButton buttonWithImageName:SJGetFileWithName(@"sj_record_video_torch_off")
                                           tag:SJRecordControlHeaderViewBtnTagTorch
                                        target:self sel:@selector(clickedBtn:)];
-    [_torchBtn setImage:[UIImage imageNamed:@"sj_record_video_torch_on"] forState:UIControlStateSelected];
+    [_torchBtn setImage:[UIImage imageNamed:SJGetFileWithName(@"sj_record_video_torch_on")] forState:UIControlStateSelected];
     return _torchBtn;
 }
 

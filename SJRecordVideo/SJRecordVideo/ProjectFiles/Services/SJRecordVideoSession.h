@@ -52,13 +52,21 @@ extern NSNotificationName const ThumbnailNotification;
 
 @interface SJRecordVideoSession (ExportAssets)
 
+/*!
+ *  presetName default is AVAssetExportPresetMediumQuality;
+ */
 - (void)exportAssets:(AVAsset *)asset completionHandle:(void(^)(AVAsset *sandBoxAsset, UIImage *previewImage))block;
+
+- (void)exportAssets:(AVAsset *)asset presetName:(NSString *)presetName completionHandle:(void(^)(AVAsset *sandBoxAsset, UIImage *previewImage))block;
 
 /*!
  *  @parma  duration    unit is sec.
  *  @parma  diraction   1 is Portrait, 0 is Landscape.
+ *  presetName default is AVAssetExportPresetMediumQuality;
  */
 - (void)exportAssets:(AVAsset *)asset maxDuration:(NSInteger)duration direction:(short)direction completionHandle:(void(^)(AVAsset *sandBoxAsset, UIImage *previewImage))block;
+
+- (void)exportAssets:(AVAsset *)asset presetName:(NSString *)presetName maxDuration:(NSInteger)duration direction:(short)direction completionHandle:(void (^)(AVAsset *, UIImage *))block;
 
 /*!
  *  cancelExport
