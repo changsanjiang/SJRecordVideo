@@ -56,6 +56,10 @@
 
 - (void)_SJVideoInfoEditingViewControllerSetupUI {
     
+    
+#warning Next.... 布局
+    
+    
     self.title = @"发布短视频";
     self.view.backgroundColor = [UIColor whiteColor];
     

@@ -279,7 +279,6 @@
     
     __weak typeof(self) _self = self;
     [self.stoppedExportSession exportAsynchronouslyWithCompletionHandler:^{
-        NSLog(@"导出完成");
         __strong typeof(_self) self = _self;
         if ( !self ) return;
         if ( self.stoppedExportSession.status == AVAssetExportSessionStatusCancelled ) {
@@ -361,7 +360,6 @@ NSNotificationName const ThumbnailNotification = @"ThumbnailNotification";
 @implementation SJRecordVideoSession (AVCaptureFileOutputRecordingDelegateMethods)
 
 - (void)captureOutput:(AVCaptureFileOutput *)captureOutput didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL fromConnections:(NSArray *)connections error:(NSError *)error {
-    NSLog(@"录制完成");
     
     if ( error ) {
         NSLog(@"录制报错 : %@", error);

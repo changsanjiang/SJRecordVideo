@@ -42,6 +42,7 @@ extern NSNotificationName const ThumbnailNotification;
  *  导出被取消
  */
 - (void)cancelExportWithSession:(SJRecordVideoSession *)session;
+
 @end
 
 
