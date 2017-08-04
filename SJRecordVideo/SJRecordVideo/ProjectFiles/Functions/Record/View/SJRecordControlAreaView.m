@@ -201,6 +201,7 @@
  */
 - (void)resetDuration {
     self.recordedDuration = 0;
+    _recordBtn.enabled = YES;
 }
 
 - (void)updateRecordFlagLocation {

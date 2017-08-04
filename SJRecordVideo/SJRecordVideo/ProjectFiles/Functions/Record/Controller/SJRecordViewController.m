@@ -88,6 +88,8 @@
     
     [self _SJRecordViewControllerSetupUI];
     
+    self.recordingOrientation = [UIDevice currentDevice].orientation;
+
     // Do any additional setup after loading the view.
 }
 
@@ -256,6 +258,13 @@
         }
             break;
     }
+}
+
+- (void)arrivedMaxDurationAreaView:(SJRecordControlAreaView *)view {
+    [self.session pauseRecordingAndComplete:^{
+        self.isRecording = NO;
+        self.areaView.enableRecordBtn = NO;
+    }];
 }
 
 @end
