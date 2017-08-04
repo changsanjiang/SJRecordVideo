@@ -87,8 +87,6 @@
     [super viewDidLoad];
     
     [self _SJRecordViewControllerSetupUI];
-    
-    self.recordingOrientation = [UIDevice currentDevice].orientation;
 
     // Do any additional setup after loading the view.
 }
@@ -96,6 +94,8 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.navigationController setNavigationBarHidden:YES animated:YES];
+    
+    self.recordingOrientation = [UIDevice currentDevice].orientation;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {

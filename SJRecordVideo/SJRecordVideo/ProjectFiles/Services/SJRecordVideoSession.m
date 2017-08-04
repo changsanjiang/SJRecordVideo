@@ -310,7 +310,7 @@
 
 /*!
  *  @parma  duration    unit is sec.
- *  @parma  diraction   YES is Portrait, NO is Landscape.
+ *  @parma  diraction   1 is Portrait, 0 is Landscape.
  */
 - (void)exportAssets:(AVAsset *)asset maxDuration:(NSInteger)duration direction:(short)direction completionHandle:(void(^)(AVAsset *sandBoxAsset, UIImage *previewImage))block; {
     [self exportAssets:asset presetName:AVAssetExportPresetMediumQuality maxDuration:duration direction:direction completionHandle:block];

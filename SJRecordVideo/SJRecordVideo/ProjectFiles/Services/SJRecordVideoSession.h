@@ -94,7 +94,7 @@ extern NSNotificationName const ThumbnailNotification;
 /*!
  *  完成录制视频
  */
-- (void)stopRecordingAndComplate:(void(^)(AVAsset *asset, UIImage *coverImage))block;
+- (void)stopRecordingAndComplate:(void(^)(AVAsset *sandboxAsset, UIImage *coverImage))block;
 
 /*!
  *  暂停录制
