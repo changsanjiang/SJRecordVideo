@@ -85,6 +85,7 @@
 
 - (CALayer *)previewLayer {
     if ( ![self.session isRunning] ) [self.session startRunning];
+#warning Next...
     return self.dbPreviewLayer;
 }
 
@@ -138,6 +139,20 @@
 }
 
 /*!
+ *  是否支持对焦
+ */
+- (BOOL)cameraSupportsTapToFocus {
+    return [[self activeCamera] isFocusPointOfInterestSupported];
+}
+
+/*!
+ *  是否支持曝光
+ */
+- (BOOL)cameraSupportsTapToExpose {
+    return [[self activeCamera] isExposurePointOfInterestSupported];
+}
+
+/*!
  *  视频输出路径
  */
 - (NSURL *)kamera_movieOutURL {
@@ -184,8 +199,8 @@
             [device unlockForConfiguration];
         }
         else {
-            if ( ![self.delegate respondsToSelector:@selector(deviceConfigurationFaieldWithError:)] ) return;
-            [self.delegate deviceConfigurationFaieldWithError:error];
+            if ( ![self.delegate respondsToSelector:@selector(deviceConfigurationFailedWithError:)] ) return;
+            [self.delegate deviceConfigurationFailedWithError:error];
         }
     }
 }
@@ -265,6 +280,7 @@
 @implementation SJRecordVideoSession (ExportAssets)
 
 - (void)exportAssets:(AVAsset *)asset completionHandle:(void(^)(AVAsset *sandBoxAsset, UIImage *previewImage))block; {
+    NSLog(@"%@", NSStringFromCGAffineTransform(asset.preferredTransform));
     [self exportAssets:asset presetName:AVAssetExportPresetMediumQuality completionHandle:block];
 }
 
@@ -317,6 +333,7 @@
 }
 
 - (void)exportAssets:(AVAsset *)asset presetName:(NSString *)presetName maxDuration:(NSInteger)duration direction:(short)direction completionHandle:(void (^)(AVAsset *, UIImage *))block {
+
     NSInteger sourceDuration = asset.duration.value / asset.duration.timescale;
     if ( sourceDuration < duration ) {
         [self exportAssets:asset completionHandle:block];
@@ -500,8 +517,8 @@ NSNotificationName const ThumbnailNotification = @"ThumbnailNotification";
             [device unlockForConfiguration];
         }
         else {
-            if ( ![self.delegate respondsToSelector:@selector(deviceConfigurationFaieldWithError:)] ) return;
-            [self.delegate deviceConfigurationFaieldWithError:error];
+            if ( ![self.delegate respondsToSelector:@selector(deviceConfigurationFailedWithError:)] ) return;
+            [self.delegate deviceConfigurationFailedWithError:error];
             NSLog(@"start Error: %@", error);
         }
     }
@@ -647,7 +664,7 @@ NSNotificationName const ThumbnailNotification = @"ThumbnailNotification";
         [self.session commitConfiguration];
     }
     else {
-        if ( [self.delegate respondsToSelector:@selector(deviceConfigurationFaieldWithError:)] ) [self.delegate deviceConfigurationFaieldWithError:error];
+        if ( [self.delegate respondsToSelector:@selector(deviceConfigurationFailedWithError:)] ) [self.delegate deviceConfigurationFailedWithError:error];
         return NO;
     }
     return YES;
@@ -685,9 +702,126 @@ NSNotificationName const ThumbnailNotification = @"ThumbnailNotification";
             [device unlockForConfiguration];
         }
         else {
-            if ( ![self.delegate respondsToSelector:@selector(deviceConfigurationFaieldWithError:)] ) return;
-            [self.delegate deviceConfigurationFaieldWithError:error];
+            if ( ![self.delegate respondsToSelector:@selector(deviceConfigurationFailedWithError:)] ) return;
+            [self.delegate deviceConfigurationFailedWithError:error];
         }
+    }
+}
+
+@end
+
+
+
+
+
+// MARK: 对焦 和 曝光
+
+@implementation SJRecordVideoSession (FocusAndExposure)
+
+static const NSString *SJCameraAdjustingExposureContext;
+
+- (void)exposeAtPoint:(CGPoint)point {
+    AVCaptureDevice *device = [self activeCamera];
+    
+    AVCaptureExposureMode exposureMode = AVCaptureExposureModeContinuousAutoExposure;
+    
+    if ( [self cameraSupportsTapToExpose] &&
+        [device isExposureModeSupported:exposureMode] ) {
+        
+        NSError *error;
+        if ( [device lockForConfiguration:&error] ) {
+            device.exposurePointOfInterest = point;
+            device.exposureMode = exposureMode;
+            
+            if ( [device isExposureModeSupported:AVCaptureExposureModeLocked] ) {
+                // 监听曝光何时完成
+                [device addObserver:self
+                         forKeyPath:@"adjustingExposure"
+                            options:NSKeyValueObservingOptionNew context:&SJCameraAdjustingExposureContext];
+            }
+            
+            [device unlockForConfiguration];
+        }
+        else {
+            if ( ![self.delegate respondsToSelector:@selector(deviceConfigurationFailedWithError:)] ) return;
+            [self.delegate deviceConfigurationFailedWithError:error];
+        }
+    }
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
+    if ( context == &SJCameraAdjustingExposureContext ) {
+        AVCaptureDevice *device = (AVCaptureDevice *)object;
+        
+        if ( !device.isAdjustingExposure && // 判断是否在调整曝光等级
+            [device isExposureModeSupported:AVCaptureExposureModeLocked] ) {
+            [object removeObserver:self forKeyPath:@"adjustingExposure" context:&SJCameraAdjustingExposureContext];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                NSError *error;
+                
+                if ( [device lockForConfiguration:&error] ) {
+                    device.exposureMode = AVCaptureExposureModeLocked;
+                    [device unlockForConfiguration];
+                }
+                else {
+                    if ( ![self.delegate respondsToSelector:@selector(deviceConfigurationFailedWithError:)] ) return;
+                    [self.delegate deviceConfigurationFailedWithError:error];
+                }
+            });
+        }
+    }
+    else {
+        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+    }
+}
+
+
+- (void)focusAtPoint:(CGPoint)point {
+    AVCaptureDevice *device = [self activeCamera];
+    if ( [self cameraSupportsTapToFocus] &&
+        [device isFocusModeSupported:AVCaptureFocusModeAutoFocus] ) {
+        
+        NSError *error;
+        if ( [device lockForConfiguration:&error] ) {
+            device.focusPointOfInterest = point;
+            device.focusMode = AVCaptureFocusModeAutoFocus;
+            [device unlockForConfiguration];
+        }
+        else {
+            if ( ![self.delegate respondsToSelector:@selector(deviceConfigurationFailedWithError:)] ) return;
+            [self.delegate deviceConfigurationFailedWithError:error];
+        }
+    }
+}
+
+- (void)resetFocusAndExposureMode {
+    AVCaptureDevice *device = [self activeCamera];
+    
+    AVCaptureFocusMode focusMode = AVCaptureFocusModeContinuousAutoFocus;
+    BOOL canResetFocus = [self cameraSupportsTapToFocus] && [device isFocusModeSupported:focusMode];
+    
+    AVCaptureExposureMode exposureMode = AVCaptureExposureModeContinuousAutoExposure;
+    BOOL canResetExposure = [self cameraSupportsTapToExpose] && [device isExposureModeSupported:exposureMode];
+    
+    CGPoint centerPoint = CGPointMake(0.5f, 0.5f);
+    
+    NSError *error;
+    if ( [device lockForConfiguration:&error] ) {
+        if ( canResetFocus ) {
+            device.focusMode = focusMode;
+            device.focusPointOfInterest = centerPoint;
+        }
+        
+        if ( canResetExposure ) {
+            device.exposureMode = exposureMode;
+            device.exposurePointOfInterest = centerPoint;
+            [device unlockForConfiguration];
+        }
+    }
+    else {
+        if ( ![self.delegate respondsToSelector:@selector(deviceConfigurationFailedWithError:)] ) return;
+        [self.delegate deviceConfigurationFailedWithError:error];
     }
 }
 

@@ -32,7 +32,7 @@ extern NSNotificationName const ThumbnailNotification;
 
 @optional
 
-- (void)deviceConfigurationFaieldWithError:(NSError *)error;
+- (void)deviceConfigurationFailedWithError:(NSError *)error;
 
 - (void)mediaCaptureFaieldWithError:(NSError *)error;
 
@@ -163,4 +163,27 @@ extern NSNotificationName const ThumbnailNotification;
  */
 @property (nonatomic, assign, readwrite) AVCaptureTorchMode torchMode;
 
+@end
+
+
+
+
+// MARK: 对焦 和 曝光
+
+@interface SJRecordVideoSession (FocusAndExposure)
+
+/*!
+ *  曝光
+ */
+- (void)exposeAtPoint:(CGPoint)point;
+
+/*!
+ *  对焦
+ */
+- (void)focusAtPoint:(CGPoint)point;
+
+/*!
+ *  恢复自动对焦
+ */
+- (void)resetFocusAndExposureMode;
 @end

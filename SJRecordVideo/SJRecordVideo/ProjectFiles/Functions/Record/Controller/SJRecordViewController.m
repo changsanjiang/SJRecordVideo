@@ -87,7 +87,7 @@
     [super viewDidLoad];
     
     [self _SJRecordViewControllerSetupUI];
-
+    
     // Do any additional setup after loading the view.
 }
 
@@ -108,6 +108,8 @@
     [self _SJRecordViewControllerRemoveNotifications];
 }
 
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {}
+
 // MARK: UI
 
 - (void)_SJRecordViewControllerSetupUI {
@@ -126,7 +128,6 @@
         make.leading.bottom.trailing.offset(0);
         make.height.equalTo(self.view).multipliedBy(0.25);
     }];
-    
     
     // MARK: Mix UI + Block Start target: AreaView
     
