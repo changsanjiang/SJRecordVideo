@@ -6,7 +6,8 @@
 //  Copyright © 2017年 SanJiang. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
+
 
 #import "AVAsset+Extension.h"
 
@@ -74,6 +75,30 @@ extern NSNotificationName const ThumbnailNotification;
 - (void)cancelExport;
 
 @end
+
+
+
+
+
+
+@interface SJRecordVideoSession (Preview)
+
+/*!
+ *  frame default is [UIScreen mainScreen].bounds
+ */
+@property (nonatomic, strong, readonly) UIView *previewView;
+
+/*!
+ *  开启对焦
+ *  default is NO
+ */
+@property (nonatomic, assign, readwrite) BOOL tappedFocus;
+
+@end
+
+
+
+
 
 
 
@@ -165,25 +190,3 @@ extern NSNotificationName const ThumbnailNotification;
 
 @end
 
-
-
-
-// MARK: 对焦 和 曝光
-
-@interface SJRecordVideoSession (FocusAndExposure)
-
-/*!
- *  曝光
- */
-- (void)exposeAtPoint:(CGPoint)point;
-
-/*!
- *  对焦
- */
-- (void)focusAtPoint:(CGPoint)point;
-
-/*!
- *  恢复自动对焦
- */
-- (void)resetFocusAndExposureMode;
-@end

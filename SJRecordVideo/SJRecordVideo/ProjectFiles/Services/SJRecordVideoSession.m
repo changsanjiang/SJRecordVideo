@@ -14,7 +14,8 @@
 
 #import "NSTimer+Extension.h"
 
-#import <UIKit/UIKit.h>
+#import <objc/message.h>
+
 
 @interface SJRecordVideoSession (AVCaptureFileOutputRecordingDelegateMethods)<AVCaptureFileOutputRecordingDelegate>
 
@@ -74,7 +75,11 @@
             videoConnection.preferredVideoStabilizationMode = AVCaptureVideoStabilizationModeAuto;
         }
     }
+    
     [self.session commitConfiguration];
+    
+    [self.session startRunning];
+    
     [self resetKamera_movieFolder];
     
     return self;
@@ -85,7 +90,6 @@
 
 - (CALayer *)previewLayer {
     if ( ![self.session isRunning] ) [self.session startRunning];
-#warning Next...
     return self.dbPreviewLayer;
 }
 
@@ -271,6 +275,128 @@
 }
 
 @end
+
+
+
+
+
+@interface SJRecordPreviewView : UIView
+
+@property (nonatomic, assign, readwrite) BOOL tappedFocus;
+@property (nonatomic, strong, readwrite) AVCaptureSession *session;
+
+@end
+
+
+@interface SJRecordPreviewView ()
+
+/*!
+ *  对焦
+ */
+@property (nonatomic, strong, readonly) UITapGestureRecognizer *singleTap;
+
+@end
+
+@implementation SJRecordPreviewView
+
+@synthesize singleTap = _singleTap;
+
++ (Class)layerClass {
+    return [AVCaptureVideoPreviewLayer class];
+}
+
+- (instancetype)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    if ( !self ) return nil;
+    [self _SJRecordPreviewSetupView];
+    [self _SJRecordPreviewViewAddTaps];
+    return self;
+}
+
+// MARK: Handle Tap
+
+- (void)handleSingleTap:(UITapGestureRecognizer *)tap {
+    NSLog(@"tapped");
+}
+
+- (void)_SJRecordPreviewViewAddTaps {
+    [self addGestureRecognizer:self.singleTap];
+    
+}
+
+// MARK: Setter
+
+- (void)setSession:(AVCaptureSession *)session {
+    [(AVCaptureVideoPreviewLayer *)self.layer setSession:session];
+}
+
+- (AVCaptureSession *)session {
+    return [(AVCaptureVideoPreviewLayer *)self.layer session];
+}
+
+// MARK: UI
+
+- (void)_SJRecordPreviewSetupView {
+    [(AVCaptureVideoPreviewLayer *)self.layer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
+    
+}
+
+// MARK: Lazy
+
+- (UITapGestureRecognizer *)singleTap {
+    if ( _singleTap ) return _singleTap;
+    _singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
+    return _singleTap;
+}
+
+@end
+
+
+
+
+
+
+@implementation SJRecordVideoSession (Preview)
+
+- (UIView *)previewView {
+    SJRecordPreviewView *previewView = objc_getAssociatedObject(self, _cmd);
+    if ( previewView ) return previewView;
+    previewView = [SJRecordPreviewView new];
+    previewView.session = self.session;
+    objc_setAssociatedObject(self, _cmd, previewView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    return previewView;
+}
+
+- (void)setTappedFocus:(BOOL)tappedFocus {
+    if ( self.tappedFocus == tappedFocus ) return;
+    objc_setAssociatedObject(self, @selector(tappedFocus), @(tappedFocus), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [(SJRecordPreviewView *)self.previewView setTappedFocus:tappedFocus];
+}
+
+- (BOOL)tappedFocus {
+    return [objc_getAssociatedObject(self, _cmd) boolValue];
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 #import <AssetsLibrary/AssetsLibrary.h>
@@ -715,6 +841,26 @@ NSNotificationName const ThumbnailNotification = @"ThumbnailNotification";
 
 
 // MARK: 对焦 和 曝光
+
+@interface SJRecordVideoSession (FocusAndExposure)
+
+/*!
+ *  曝光
+ */
+- (void)exposeAtPoint:(CGPoint)point;
+
+/*!
+ *  对焦
+ */
+- (void)focusAtPoint:(CGPoint)point;
+
+/*!
+ *  恢复自动对焦
+ */
+- (void)resetFocusAndExposureMode;
+
+@end
+
 
 @implementation SJRecordVideoSession (FocusAndExposure)
 

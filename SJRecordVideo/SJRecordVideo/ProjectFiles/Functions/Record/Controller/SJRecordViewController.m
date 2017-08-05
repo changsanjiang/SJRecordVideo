@@ -114,8 +114,8 @@
 
 - (void)_SJRecordViewControllerSetupUI {
     
-    [self.view.layer addSublayer:self.session.previewLayer];
-    self.session.previewLayer.frame = self.view.bounds;
+    [self.view addSubview:self.session.previewView];
+    self.session.previewView.frame = self.view.bounds;
     
     [self.view addSubview:self.headerView];
     [self.view addSubview:self.areaView];
