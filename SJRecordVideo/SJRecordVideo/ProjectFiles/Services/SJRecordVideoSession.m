@@ -969,6 +969,12 @@ static const NSString *SJCameraAdjustingExposureContext;
     [(AVCaptureVideoPreviewLayer *)self.layer setSession:session];
 }
 
+- (void)setTappedFocus:(BOOL)tappedFocus {
+    if ( _tappedFocus == tappedFocus ) return;
+    _tappedFocus = tappedFocus;
+    _singleTap.enabled = tappedFocus;
+}
+
 // MARK: UI
 
 - (void)_SJRecordPreviewSetupView {

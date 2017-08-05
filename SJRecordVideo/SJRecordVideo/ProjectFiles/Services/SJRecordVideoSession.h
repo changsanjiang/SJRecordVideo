@@ -21,12 +21,24 @@ extern NSNotificationName const ThumbnailNotification;
 
 @property (nonatomic, weak) id <SJRecordVideoSessionDelegate> delegate;
 
+@end
+
+
+@interface SJRecordVideoSession (Preview)
+
 /*!
- *  default Frame is [UIScreen mainScreen].bounds
+ *  frame default is [UIScreen mainScreen].bounds
  */
-@property (nonatomic, strong, readonly) CALayer *previewLayer;
+@property (nonatomic, strong, readonly) UIView *previewView;
+
+/*!
+ *  开启对焦
+ *  default is NO
+ */
+@property (nonatomic, assign, readwrite) BOOL tappedFocus;
 
 @end
+
 
 
 @protocol SJRecordVideoSessionDelegate <NSObject>
@@ -78,23 +90,6 @@ extern NSNotificationName const ThumbnailNotification;
 
 
 
-
-
-
-@interface SJRecordVideoSession (Preview)
-
-/*!
- *  frame default is [UIScreen mainScreen].bounds
- */
-@property (nonatomic, strong, readonly) UIView *previewView;
-
-/*!
- *  开启对焦
- *  default is NO
- */
-@property (nonatomic, assign, readwrite) BOOL tappedFocus;
-
-@end
 
 
 
