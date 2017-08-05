@@ -283,73 +283,12 @@
 @interface SJRecordPreviewView : UIView
 
 @property (nonatomic, assign, readwrite) BOOL tappedFocus;
-@property (nonatomic, strong, readwrite) AVCaptureSession *session;
+
+- (instancetype)initWithSJRecordSession:(SJRecordVideoSession *)recordSession;
 
 @end
 
 
-@interface SJRecordPreviewView ()
-
-/*!
- *  对焦
- */
-@property (nonatomic, strong, readonly) UITapGestureRecognizer *singleTap;
-
-@end
-
-@implementation SJRecordPreviewView
-
-@synthesize singleTap = _singleTap;
-
-+ (Class)layerClass {
-    return [AVCaptureVideoPreviewLayer class];
-}
-
-- (instancetype)initWithFrame:(CGRect)frame {
-    self = [super initWithFrame:frame];
-    if ( !self ) return nil;
-    [self _SJRecordPreviewSetupView];
-    [self _SJRecordPreviewViewAddTaps];
-    return self;
-}
-
-// MARK: Handle Tap
-
-- (void)handleSingleTap:(UITapGestureRecognizer *)tap {
-    NSLog(@"tapped");
-}
-
-- (void)_SJRecordPreviewViewAddTaps {
-    [self addGestureRecognizer:self.singleTap];
-    
-}
-
-// MARK: Setter
-
-- (void)setSession:(AVCaptureSession *)session {
-    [(AVCaptureVideoPreviewLayer *)self.layer setSession:session];
-}
-
-- (AVCaptureSession *)session {
-    return [(AVCaptureVideoPreviewLayer *)self.layer session];
-}
-
-// MARK: UI
-
-- (void)_SJRecordPreviewSetupView {
-    [(AVCaptureVideoPreviewLayer *)self.layer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
-    
-}
-
-// MARK: Lazy
-
-- (UITapGestureRecognizer *)singleTap {
-    if ( _singleTap ) return _singleTap;
-    _singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
-    return _singleTap;
-}
-
-@end
 
 
 
@@ -361,8 +300,7 @@
 - (UIView *)previewView {
     SJRecordPreviewView *previewView = objc_getAssociatedObject(self, _cmd);
     if ( previewView ) return previewView;
-    previewView = [SJRecordPreviewView new];
-    previewView.session = self.session;
+    previewView = [[SJRecordPreviewView alloc] initWithSJRecordSession:self];
     objc_setAssociatedObject(self, _cmd, previewView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     return previewView;
 }
@@ -969,6 +907,89 @@ static const NSString *SJCameraAdjustingExposureContext;
         if ( ![self.delegate respondsToSelector:@selector(deviceConfigurationFailedWithError:)] ) return;
         [self.delegate deviceConfigurationFailedWithError:error];
     }
+}
+
+@end
+
+
+
+
+@interface SJRecordPreviewView ()
+
+/*!
+ *  对焦
+ */
+@property (nonatomic, strong, readonly)  UITapGestureRecognizer *singleTap;
+
+@property (nonatomic, weak,   readwrite) SJRecordVideoSession *recordSession;
+
+@end
+
+@implementation SJRecordPreviewView
+
+@synthesize singleTap = _singleTap;
+
++ (Class)layerClass {
+    return [AVCaptureVideoPreviewLayer class];
+}
+
+- (instancetype)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    if ( !self ) return nil;
+    [self _SJRecordPreviewSetupView];
+    [self _SJRecordPreviewViewAddTaps];
+    return self;
+}
+
+- (instancetype)initWithSJRecordSession:(SJRecordVideoSession *)recordSession {
+    self = [self initWithFrame:[UIScreen mainScreen].bounds];
+    if ( !self ) return nil;
+    self.recordSession = recordSession;
+    if ( ![self.recordSession.session isRunning] ) [self.recordSession.session startRunning];
+    [self setSession:self.recordSession.session];
+    return self;
+}
+
+// MARK: Handle Tap
+
+- (void)handleSingleTap:(UITapGestureRecognizer *)tap {
+    NSLog(@"tapped");
+    CGPoint point = [self captureDevicePointForPoint:[tap locationInView:tap.view]];
+    [self.recordSession focusAtPoint:point];
+}
+
+- (void)_SJRecordPreviewViewAddTaps {
+    [self addGestureRecognizer:self.singleTap];
+    
+}
+
+// MARK: Setter
+
+- (void)setSession:(AVCaptureSession *)session {
+    [(AVCaptureVideoPreviewLayer *)self.layer setSession:session];
+}
+
+// MARK: UI
+
+- (void)_SJRecordPreviewSetupView {
+    [(AVCaptureVideoPreviewLayer *)self.layer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
+    
+}
+
+// MARK: Lazy
+
+- (UITapGestureRecognizer *)singleTap {
+    if ( _singleTap ) return _singleTap;
+    _singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
+    return _singleTap;
+}
+
+// MARK: Point
+
+- (CGPoint)captureDevicePointForPoint:(CGPoint)point {
+    AVCaptureVideoPreviewLayer *layer =
+    (AVCaptureVideoPreviewLayer *)self.layer;
+    return [layer captureDevicePointOfInterestForPoint:point];
 }
 
 @end
