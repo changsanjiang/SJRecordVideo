@@ -229,7 +229,7 @@
             // stop
             if ( self.areaView.recordedDuration >= self.areaView.minDuration ) {
                 [SVProgressHUD showWithStatus:@"准备导出"];
-                self.isRecording = NO;
+                [self resetParameters];
                 __weak typeof(self) _self = self;
                 self.areaView.enableRecordBtn = NO;
                 [self.session stopRecordingAndComplate:^(AVAsset *asset, UIImage *coverImage) {
@@ -242,7 +242,6 @@
                     vc.coverImage = coverImage;
                     [_self.navigationController pushViewController:vc animated:YES];
                     _self.areaView.enableRecordBtn = YES;
-                    [_self resetParameters];
                 }];
             }
         }
@@ -254,13 +253,9 @@
             break;
         case SJRecordControlAreaViewBtnTagDel: {
             [SVProgressHUD showWithStatus:@"正在取消"];
-            self.isRecording = NO;
-            __weak typeof(self) _self = self;
+            [self resetParameters];
             [self.session resetRecordingAndCallBlock:^{
-                __strong typeof(_self) self = _self;
-                if ( !self ) return;
                 [SVProgressHUD dismiss];
-                [self resetParameters];
             }];
         }
             break;
@@ -270,6 +265,7 @@
 - (void)resetParameters {
     [self.areaView resetDuration];
     self.recordingOrientation = UIDeviceOrientationPortrait;
+    self.isRecording = NO;
 }
 
 - (void)arrivedMaxDurationAreaView:(SJRecordControlAreaView *)view {
