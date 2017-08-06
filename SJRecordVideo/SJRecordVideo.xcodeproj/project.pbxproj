@@ -142,7 +142,6 @@
 				77BF9ECE1F334254008A4735 /* SJViewController.h */,
 				77BF9ECF1F334254008A4735 /* SJViewController.m */,
 				77BF9E8C1F330684008A4735 /* 功能 */,
-				77BF9E8F1F330684008A4735 /* 模型 */,
 				77BF9E911F330694008A4735 /* 服务 */,
 				77BF9EAE1F330BC1008A4735 /* 图片资源 */,
 			);
@@ -160,14 +159,6 @@
 			);
 			name = "功能";
 			path = Functions;
-			sourceTree = "<group>";
-		};
-		77BF9E8F1F330684008A4735 /* 模型 */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "模型";
-			path = Model;
 			sourceTree = "<group>";
 		};
 		77BF9E911F330694008A4735 /* 服务 */ = {

@@ -75,7 +75,6 @@
             videoConnection.preferredVideoStabilizationMode = AVCaptureVideoStabilizationModeAuto;
         }
     }
-    
     [self.session commitConfiguration];
     
     [self.session startRunning];

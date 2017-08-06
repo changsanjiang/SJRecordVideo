@@ -42,7 +42,7 @@
 @property (nonatomic, strong, readonly) SJSelectRecordTimeView *selectRecordTimeView;
 
 @property (nonatomic, strong, readonly) NSTimer *observeTimer;
-@property (nonatomic, assign, readwrite) NSInteger recordedDuration;
+@property (nonatomic, assign, readwrite) NSTimeInterval rec;
 
 @end
 
@@ -187,6 +187,13 @@
 }
 
 
+// MARK: Getter
+
+- (NSInteger)recordedDuration {
+    return (NSInteger)_rec;
+}
+
+
 // MARK: Actions
 
 - (void)clickedBtn:(UIButton *)btn {
@@ -200,7 +207,7 @@
  *  重置录制时间
  */
 - (void)resetDuration {
-    self.recordedDuration = 0;
+    self.rec = 0;
     _recordBtn.enabled = YES;
 }
 
@@ -351,11 +358,11 @@
         __strong typeof(_self) self = _self;
         if ( !self ) return;
         dispatch_async(dispatch_get_main_queue(), ^{
-            _self.recordedDuration += 1;
+            _self.rec += 0.1;
         });
 
     };
-    _observeTimer = [NSTimer sj_scheduledTimerWithTimeInterval:1 exeBlock:exeBlock repeats:YES];
+    _observeTimer = [NSTimer sj_scheduledTimerWithTimeInterval:0.1 exeBlock:exeBlock repeats:YES];
     return _observeTimer;
 }
 
@@ -369,21 +376,21 @@
 
 
 - (void)_SJRecordControlAreaViewObservers {
-    [self addObserver:self forKeyPath:@"recordedDuration" options:NSKeyValueObservingOptionNew context:nil];
+    [self addObserver:self forKeyPath:@"rec" options:NSKeyValueObservingOptionNew context:nil];
 }
 
 - (void)_SJRecordControlAreaViewRemoveObservers {
-    [self removeObserver:self forKeyPath:@"recordedDuration"];
+    [self removeObserver:self forKeyPath:@"rec"];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
-    if ( [keyPath isEqualToString:@"recordedDuration"] ) {
+    if ( [keyPath isEqualToString:@"rec"] ) {
         
-        _selectRecordTimeView.enableBtns = ( 0 == _recordedDuration );
+        _selectRecordTimeView.enableBtns = ( 0 == _rec );
         
-        _completeBtn.enabled = ( _recordedDuration >= _minDuration );
+        _completeBtn.enabled = ( _rec >= _minDuration );
         
-        BOOL isRecordingOrPaused = ( 0 != _recordedDuration );
+        BOOL isRecordingOrPaused = ( 0 != _rec );
         CGFloat localAlpha = 0.001;
         CGFloat completeOrDeleteAlpha = 0.001;
         if ( isRecordingOrPaused ) {
@@ -405,7 +412,9 @@
         NSDate *date = [NSDate dateWithTimeIntervalSince1970:self.recordedDuration];
         
         self.durationLabel.text = [self.formatter stringFromDate:date];
-        [self.durationProgressView setProgress:(self.recordedDuration * 1.0) / self.maxDuration animated:YES];
+        
+        [self.durationProgressView setProgress:self.rec / self.maxDuration animated:YES];
+        
         if ( self.recordedDuration == self.minDuration - 5 ) {
             if ( [self.delegate respondsToSelector:@selector(arrivedMinDurationAreaView:)] ) {
                 [self.delegate arrivedMinDurationAreaView:self];
