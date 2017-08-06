@@ -1,5 +1,5 @@
 # RecordVideo
-record video and export. 短视频录制. 支持暂停&对焦&本地选取.    
+record video and export. 短视频录制. 自由定制录制时间. 支持暂停&对焦&本地选取.    
 
 ### 右
 <img src="https://github.com/changsanjiang/RecordVideo/blob/master/SJRecordVideo/SJRecordVideo/sample3.png" width="30%" />    
