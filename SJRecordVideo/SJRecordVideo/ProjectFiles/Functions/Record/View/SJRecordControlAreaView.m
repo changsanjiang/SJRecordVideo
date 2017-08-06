@@ -324,6 +324,7 @@
                                              tag:SJRecordControlAreaViewBtnTagEnd
                                           target:self
                                              sel:@selector(clickedBtn:)];
+    _completeBtn.backgroundColor = [UIColor clearColor];
     return _completeBtn;
 }
 
@@ -333,6 +334,7 @@
                                            tag:SJRecordControlAreaViewBtnTagDel
                                         target:self
                                            sel:@selector(clickedBtn:)];
+    _deleteBtn.backgroundColor = [UIColor clearColor];
     return _deleteBtn;
 }
 
