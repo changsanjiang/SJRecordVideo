@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-
 #import "AVAsset+Extension.h"
 
 extern NSNotificationName const ThumbnailNotification;
@@ -33,7 +32,7 @@ extern NSNotificationName const ThumbnailNotification;
 
 /*!
  *  开启对焦
- *  default is NO
+ *  default is YES
  */
 @property (nonatomic, assign, readwrite) BOOL tappedFocus;
 

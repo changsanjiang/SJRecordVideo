@@ -301,6 +301,7 @@
     SJRecordPreviewView *previewView = objc_getAssociatedObject(self, _cmd);
     if ( previewView ) return previewView;
     previewView = [[SJRecordPreviewView alloc] initWithSJRecordSession:self];
+    previewView.tappedFocus = YES;
     objc_setAssociatedObject(self, _cmd, previewView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     return previewView;
 }
