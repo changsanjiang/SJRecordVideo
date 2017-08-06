@@ -103,7 +103,7 @@ static NSString * const SJLocalPreviewCollectionViewCellID = @"SJLocalPreviewCol
 
 - (void)_SJSelectLovalVideoViewControllerSetupUI {
     
-    self.title = @"选择视频";
+    self.title = @"选取本地视频";
     
     self.navigationItem.rightBarButtonItem = nil;
     

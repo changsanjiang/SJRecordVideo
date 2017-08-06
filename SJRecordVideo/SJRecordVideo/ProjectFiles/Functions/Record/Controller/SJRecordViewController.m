@@ -194,6 +194,7 @@
 - (void)areaView:(SJRecordControlAreaView *)view clickedBtnTag:(SJRecordControlAreaViewBtnTag)tag {
     switch (tag) {
         case SJRecordControlAreaViewBtnTagRecord: {
+            // start
             if ( self.areaView.recordedDuration >= self.areaView.maxDuration && !self.isRecording ) return;
             if ( !self.isRecording ) {
                 AVCaptureVideoOrientation orientation = AVCaptureVideoOrientationPortrait;
@@ -227,9 +228,11 @@
         case SJRecordControlAreaViewBtnTagEnd: {
             // stop
             if ( self.areaView.recordedDuration >= self.areaView.minDuration ) {
+                [SVProgressHUD showWithStatus:@"准备导出"];
                 __weak typeof(self) _self = self;
                 self.areaView.enableRecordBtn = NO;
                 [self.session stopRecordingAndComplate:^(AVAsset *asset, UIImage *coverImage) {
+                    [SVProgressHUD dismiss];
                     SJScreenOrientation direction = SJScreenOrientationLandscape;
                     if ( _recordingOrientation == UIDeviceOrientationPortrait ) {
                         direction = SJScreenOrientationPortrait;
@@ -237,9 +240,8 @@
                     SJVideoInfoEditingViewController *vc = [[SJVideoInfoEditingViewController alloc] initWithAsset:asset direction:direction];
                     vc.coverImage = coverImage;
                     [_self.navigationController pushViewController:vc animated:YES];
-                    [_self.areaView resetDuration];
                     _self.areaView.enableRecordBtn = YES;
-                    _self.isRecording = NO;
+                    [_self resetParameters];
                 }];
             }
         }
@@ -250,16 +252,23 @@
         }
             break;
         case SJRecordControlAreaViewBtnTagDel: {
+            [SVProgressHUD showWithStatus:@"正在取消"];
             __weak typeof(self) _self = self;
             [self.session resetRecordingAndCallBlock:^{
                 __strong typeof(_self) self = _self;
                 if ( !self ) return;
-                [self.areaView resetDuration];
-                self.isRecording = NO;
+                [SVProgressHUD dismiss];
+                [self resetParameters];
             }];
         }
             break;
     }
+}
+
+- (void)resetParameters {
+    [self.areaView resetDuration];
+    self.recordingOrientation = UIDeviceOrientationPortrait;
+    self.isRecording = NO;
 }
 
 - (void)arrivedMaxDurationAreaView:(SJRecordControlAreaView *)view {
