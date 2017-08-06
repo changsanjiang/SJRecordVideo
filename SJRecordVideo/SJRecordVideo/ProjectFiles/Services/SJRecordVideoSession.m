@@ -877,6 +877,51 @@ static const NSString *SJCameraAdjustingExposureContext;
             [self.delegate deviceConfigurationFailedWithError:error];
         }
     }
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self resetFocusMode];
+    });
+}
+
+- (void)resetFocusMode {
+    AVCaptureDevice *device = [self activeCamera];
+    AVCaptureFocusMode focusMode = AVCaptureFocusModeContinuousAutoFocus;
+    if ( device.focusMode == focusMode ) return;
+    BOOL canResetFocus = [self cameraSupportsTapToFocus] && [device isFocusModeSupported:focusMode];
+    if ( !canResetFocus ) return;
+    
+    CGPoint centerPoint = CGPointMake(0.5f, 0.5f);
+    
+    NSError *error;
+    if ( [device lockForConfiguration:&error] ) {
+        device.focusMode = focusMode;
+        device.focusPointOfInterest = centerPoint;
+    }
+    else {
+        if ( ![self.delegate respondsToSelector:@selector(deviceConfigurationFailedWithError:)] ) return;
+        [self.delegate deviceConfigurationFailedWithError:error];
+    }
+}
+
+- (void)resetExposureMode {
+    AVCaptureDevice *device = [self activeCamera];
+    AVCaptureExposureMode exposureMode = AVCaptureExposureModeContinuousAutoExposure;
+    if ( device.exposureMode ==  exposureMode ) return;
+    
+    BOOL canResetExposure = [self cameraSupportsTapToExpose] && [device isExposureModeSupported:exposureMode];
+    if ( !canResetExposure ) return;
+    
+    CGPoint centerPoint = CGPointMake(0.5f, 0.5f);
+    NSError *error;
+    if ( [device lockForConfiguration:&error] ) {
+        device.exposureMode = exposureMode;
+        device.exposurePointOfInterest = centerPoint;
+        [device unlockForConfiguration];
+    }
+    else {
+        if ( ![self.delegate respondsToSelector:@selector(deviceConfigurationFailedWithError:)] ) return;
+        [self.delegate deviceConfigurationFailedWithError:error];
+    }
 }
 
 - (void)resetFocusAndExposureMode {
