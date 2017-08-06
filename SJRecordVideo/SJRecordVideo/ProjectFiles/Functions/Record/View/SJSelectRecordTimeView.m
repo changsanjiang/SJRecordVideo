@@ -18,6 +18,8 @@
 @property (nonatomic, strong, readonly) UIButton *modeBtn1;
 @property (nonatomic, strong, readonly) UIButton *modeBtn2;
 
+@property (nonatomic, weak, readwrite) UIButton *noSelectBtn;
+
 @end
 
 @implementation SJSelectRecordTimeView
@@ -40,6 +42,7 @@
     _enableBtns = enableBtns;
     self.modeBtn1.enabled = enableBtns;
     self.modeBtn2.enabled = enableBtns;
+    self.noSelectBtn.hidden = !enableBtns;
 }
 
 - (void)setBtn1Title:(NSString *)btn1Title {
@@ -69,6 +72,7 @@
                 make.leading.equalTo(_modeBtn1.mas_trailing).offset(8);
             }];
             if ( self.clickedBtn1Block ) self.clickedBtn1Block();
+            self.noSelectBtn = _modeBtn2;
         }
             break;
             // 分钟
@@ -83,6 +87,7 @@
                 make.centerX.equalTo(_roundView);
             }];
             if ( self.clickedBtn2Block ) self.clickedBtn2Block();
+            self.noSelectBtn = _modeBtn1;
         }
             break;
         default:
@@ -115,6 +120,8 @@
         make.top.bottom.offset(0);
         make.leading.equalTo(_modeBtn1.mas_trailing).offset(8);
     }];
+    
+    self.noSelectBtn = _modeBtn2;
 }
 
 - (UIView *)roundView {

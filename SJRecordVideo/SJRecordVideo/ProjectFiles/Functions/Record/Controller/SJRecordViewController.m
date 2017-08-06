@@ -146,6 +146,7 @@
         _self.areaView.maxDuration = 3 * 60;
         [_self.areaView updateRecordFlagLocation];
     };
+    
     // MARK: Mix End
 
 }
