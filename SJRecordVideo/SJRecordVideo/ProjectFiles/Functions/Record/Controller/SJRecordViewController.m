@@ -229,6 +229,7 @@
             // stop
             if ( self.areaView.recordedDuration >= self.areaView.minDuration ) {
                 [SVProgressHUD showWithStatus:@"准备导出"];
+                self.isRecording = NO;
                 __weak typeof(self) _self = self;
                 self.areaView.enableRecordBtn = NO;
                 [self.session stopRecordingAndComplate:^(AVAsset *asset, UIImage *coverImage) {
@@ -253,6 +254,7 @@
             break;
         case SJRecordControlAreaViewBtnTagDel: {
             [SVProgressHUD showWithStatus:@"正在取消"];
+            self.isRecording = NO;
             __weak typeof(self) _self = self;
             [self.session resetRecordingAndCallBlock:^{
                 __strong typeof(_self) self = _self;
@@ -268,7 +270,6 @@
 - (void)resetParameters {
     [self.areaView resetDuration];
     self.recordingOrientation = UIDeviceOrientationPortrait;
-    self.isRecording = NO;
 }
 
 - (void)arrivedMaxDurationAreaView:(SJRecordControlAreaView *)view {
