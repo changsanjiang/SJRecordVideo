@@ -65,10 +65,13 @@
 @property (nonatomic, assign, readwrite) BOOL isRecording;
 @property (nonatomic, assign, readwrite) UIDeviceOrientation recordingOrientation;
 
+@property (nonatomic, strong, readonly) UIView *fullMaskView;
+
 @end
 
 @implementation SJRecordViewController
 
+@synthesize fullMaskView = _fullMaskView;
 @synthesize headerView = _headerView;
 @synthesize areaView = _areaView;
 @synthesize session = _session;
@@ -165,6 +168,14 @@
     return _areaView;
 }
 
+- (UIView *)fullMaskView {
+    if ( _fullMaskView ) return _fullMaskView;
+    _fullMaskView = [UIView new];
+    _fullMaskView.backgroundColor = [UIColor clearColor];
+    _fullMaskView.frame = [UIScreen mainScreen].bounds;
+    return _fullMaskView;
+}
+
 // MARK: Status bar
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
@@ -229,15 +240,17 @@
             // stop
             if ( self.areaView.recordedDuration >= self.areaView.minDuration ) {
                 [SVProgressHUD showWithStatus:@"准备导出"];
+                [self.view addSubview:self.fullMaskView];
+                SJScreenOrientation direction = SJScreenOrientationLandscape;
+                if ( self.recordingOrientation == UIDeviceOrientationPortrait ) {
+                    direction = SJScreenOrientationPortrait;
+                }
                 [self resetParameters];
                 __weak typeof(self) _self = self;
                 self.areaView.enableRecordBtn = NO;
                 [self.session stopRecordingAndComplate:^(AVAsset *asset, UIImage *coverImage) {
                     [SVProgressHUD dismiss];
-                    SJScreenOrientation direction = SJScreenOrientationLandscape;
-                    if ( _recordingOrientation == UIDeviceOrientationPortrait ) {
-                        direction = SJScreenOrientationPortrait;
-                    }
+                    [_self.fullMaskView removeFromSuperview];
                     SJVideoInfoEditingViewController *vc = [[SJVideoInfoEditingViewController alloc] initWithAsset:asset direction:direction];
                     vc.coverImage = coverImage;
                     [_self.navigationController pushViewController:vc animated:YES];
@@ -254,8 +267,11 @@
         case SJRecordControlAreaViewBtnTagDel: {
             [SVProgressHUD showWithStatus:@"正在取消"];
             [self resetParameters];
+            [self.view addSubview:self.fullMaskView];
+            __weak typeof(self) _self = self;
             [self.session resetRecordingAndCallBlock:^{
                 [SVProgressHUD dismiss];
+                [_self.fullMaskView removeFromSuperview];
             }];
         }
             break;
