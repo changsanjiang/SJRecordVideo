@@ -241,8 +241,6 @@
 			isa = PBXGroup;
 			children = (
 				77BF9ECB1F333EE7008A4735 /* Controller */,
-				77BF9ECD1F333EE7008A4735 /* Video */,
-				77BF9ECC1F333EE7008A4735 /* Model */,
 			);
 			name = "填写视频详情";
 			path = Editing;
@@ -255,20 +253,6 @@
 				77BF9ED21F334514008A4735 /* SJVideoInfoEditingViewController.m */,
 			);
 			path = Controller;
-			sourceTree = "<group>";
-		};
-		77BF9ECC1F333EE7008A4735 /* Model */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Model;
-			sourceTree = "<group>";
-		};
-		77BF9ECD1F333EE7008A4735 /* Video */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Video;
 			sourceTree = "<group>";
 		};
 		77BF9EDD1F334C72008A4735 /* 本地视频 */ = {
