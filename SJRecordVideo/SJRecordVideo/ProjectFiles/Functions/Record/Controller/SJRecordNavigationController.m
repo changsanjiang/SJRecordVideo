@@ -19,7 +19,7 @@
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
-    UIViewController* topVC = self.topViewController;
+    UIViewController *topVC = self.topViewController;
     return [topVC preferredStatusBarStyle];
 }
 
