@@ -250,11 +250,13 @@
                 self.areaView.enableRecordBtn = NO;
                 [self.session stopRecordingAndComplate:^(AVAsset *asset, UIImage *coverImage) {
                     [SVProgressHUD dismiss];
-                    [_self.fullMaskView removeFromSuperview];
+                    __strong typeof(_self) self = _self;
+                    if ( !self ) return;
+                    [self.fullMaskView removeFromSuperview];
                     SJVideoInfoEditingViewController *vc = [[SJVideoInfoEditingViewController alloc] initWithAsset:asset direction:direction];
                     vc.coverImage = coverImage;
-                    [_self.navigationController pushViewController:vc animated:YES];
-                    _self.areaView.enableRecordBtn = YES;
+                    [self.navigationController pushViewController:vc animated:YES];
+                    self.areaView.enableRecordBtn = YES;
                 }];
             }
         }
@@ -271,7 +273,9 @@
             __weak typeof(self) _self = self;
             [self.session resetRecordingAndCallBlock:^{
                 [SVProgressHUD dismiss];
-                [_self.fullMaskView removeFromSuperview];
+                __strong typeof(_self) self = _self;
+                if ( !self ) return;
+                [self.fullMaskView removeFromSuperview];
             }];
         }
             break;
