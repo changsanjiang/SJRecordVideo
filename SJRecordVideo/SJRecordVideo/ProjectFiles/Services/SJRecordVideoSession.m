@@ -33,10 +33,10 @@
 @property (nonatomic, strong, readonly) AVCaptureDeviceInput *dbAudioInput;
 @property (nonatomic, strong, readonly) AVCaptureMovieFileOutput *dbMovieOutput;
 @property (nonatomic, strong, readonly) AVCaptureVideoPreviewLayer *dbPreviewLayer;
-@property (nonatomic, strong, readonly) NSURL *kamera_movieOutURL;
-@property (nonatomic, strong, readonly) NSURL *kamera_movieFolderURL;
+@property (nonatomic, strong, readonly) NSURL *camera_movieOutURL;
+@property (nonatomic, strong, readonly) NSURL *camera_movieFolderURL;
 
-@property (nonatomic, assign, readwrite) NSInteger kamera_movieRecordIndex;
+@property (nonatomic, assign, readwrite) NSInteger camera_movieRecordIndex;
 
 @property (nonatomic, strong, readonly) NSTimer *exportProgressTimer;
 @property (nonatomic, strong, readwrite) AVAssetExportSession *stoppedExportSession;
@@ -58,9 +58,9 @@
 @synthesize dbAudioInput = _dbAudioInput;
 @synthesize dbMovieOutput = _dbMovieOutput;
 @synthesize dbPreviewLayer = _dbPreviewLayer;
-@synthesize kamera_movieOutURL = _kamera_movieOutURL;
+@synthesize camera_movieOutURL = _camera_movieOutURL;
 @synthesize exportProgressTimer = _exportProgressTimer;
-@synthesize kamera_movieFolderURL = _kamera_movieFolderURL;
+@synthesize camera_movieFolderURL = _camera_movieFolderURL;
 
 - (instancetype)init {
     self = [super init];
@@ -79,7 +79,7 @@
     
     [self.session startRunning];
     
-    [self resetKamera_movieFolder];
+    [self resetcamera_movieFolder];
     
     return self;
 }
@@ -162,25 +162,25 @@
 /*!
  *  视频输出路径
  */
-- (NSURL *)kamera_movieOutURL {
-    if ( _kamera_movieOutURL ) return _kamera_movieOutURL;
-    _kamera_movieOutURL = [self.kamera_movieFolderURL URLByAppendingPathComponent:[NSString stringWithFormat:@"%03zd_db_kamera_movie.mov", self.kamera_movieRecordIndex]];
-    self.kamera_movieRecordIndex += 1;
-    return _kamera_movieOutURL;
+- (NSURL *)camera_movieOutURL {
+    if ( _camera_movieOutURL ) return _camera_movieOutURL;
+    _camera_movieOutURL = [self.camera_movieFolderURL URLByAppendingPathComponent:[NSString stringWithFormat:@"%03zd_db_camera_movie.mov", self.camera_movieRecordIndex]];
+    self.camera_movieRecordIndex += 1;
+    return _camera_movieOutURL;
 }
 
-- (void)resetKamera_movieFolder {
+- (void)resetcamera_movieFolder {
     // 重置记录索引
-    self.kamera_movieRecordIndex = 0;
-    NSString *kamera_movieFolderPathStr = [self.kamera_movieFolderURL.absoluteString substringFromIndex:7];
-    [[NSFileManager defaultManager] removeItemAtPath:kamera_movieFolderPathStr error:nil];
-    [[NSFileManager defaultManager] createDirectoryAtPath:kamera_movieFolderPathStr withIntermediateDirectories:YES attributes:nil error:nil];
+    self.camera_movieRecordIndex = 0;
+    NSString *camera_movieFolderPathStr = [self.camera_movieFolderURL.absoluteString substringFromIndex:7];
+    [[NSFileManager defaultManager] removeItemAtPath:camera_movieFolderPathStr error:nil];
+    [[NSFileManager defaultManager] createDirectoryAtPath:camera_movieFolderPathStr withIntermediateDirectories:YES attributes:nil error:nil];
 }
 
-- (NSURL *)kamera_movieFolderURL {
-    if ( _kamera_movieFolderURL ) return _kamera_movieFolderURL;
-    _kamera_movieFolderURL = [[[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject] URLByAppendingPathComponent:@"db_kamera_movies"];
-    return _kamera_movieFolderURL;
+- (NSURL *)camera_movieFolderURL {
+    if ( _camera_movieFolderURL ) return _camera_movieFolderURL;
+    _camera_movieFolderURL = [[[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject] URLByAppendingPathComponent:@"db_camera_movies"];
+    return _camera_movieFolderURL;
 }
 
 // MARK: ------
@@ -379,7 +379,7 @@
         }
         
         [self thumbnailForVideoAtURL:exportURL atTime:kCMTimeZero generatedImage:^(UIImage *image) {
-            [self resetKamera_movieFolder];
+            [self resetcamera_movieFolder];
             AVAsset *asset = [AVAsset assetWithURL:exportURL];
             asset.assetURL = exportURL;
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -472,12 +472,12 @@ NSNotificationName const ThumbnailNotification = @"ThumbnailNotification";
     /*!
      *  清空操作
      */
-    _kamera_movieOutURL = nil;
+    _camera_movieOutURL = nil;
 }
 
 - (void)compoundRecordsMedia {
-    NSString *kamera_movieFolderPathStr = [_kamera_movieFolderURL.absoluteString substringFromIndex:7];
-    NSArray<NSString *> *items = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:kamera_movieFolderPathStr error:nil];
+    NSString *camera_movieFolderPathStr = [_camera_movieFolderURL.absoluteString substringFromIndex:7];
+    NSArray<NSString *> *items = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:camera_movieFolderPathStr error:nil];
     
     // 文件排序
     NSStringCompareOptions comparisonOptions = NSNumericSearch;
@@ -529,7 +529,7 @@ NSNotificationName const ThumbnailNotification = @"ThumbnailNotification";
     __block CMTime cursorTime = kCMTimeZero;
     
     for ( int i = 0 ; i < resultArr.count ; i ++ ) {
-        NSURL *fileURL = [_kamera_movieFolderURL URLByAppendingPathComponent:resultArr[i]];
+        NSURL *fileURL = [_camera_movieFolderURL URLByAppendingPathComponent:resultArr[i]];
         AVAsset *asset = [AVAsset assetWithURL:fileURL];
         
         // asset track
@@ -590,7 +590,7 @@ NSNotificationName const ThumbnailNotification = @"ThumbnailNotification";
             NSLog(@"start Error: %@", error);
         }
     }
-    [self.dbMovieOutput startRecordingToOutputFileURL:self.kamera_movieOutURL recordingDelegate:self];
+    [self.dbMovieOutput startRecordingToOutputFileURL:self.camera_movieOutURL recordingDelegate:self];
 }
 
 /*!
@@ -636,7 +636,7 @@ NSNotificationName const ThumbnailNotification = @"ThumbnailNotification";
  */
 - (void)resetRecordingAndCallBlock:(void(^)())block {
     [self pauseRecordingAndComplete:^{
-        [self resetKamera_movieFolder];
+        [self resetcamera_movieFolder];
         if ( block ) block();
     }];
 }
@@ -711,7 +711,7 @@ NSNotificationName const ThumbnailNotification = @"ThumbnailNotification";
  */
 - (BOOL)switchCameras {
     if ( ![self canSwitchCameras] ) return NO;
-    [self resetKamera_movieFolder];
+    [self resetcamera_movieFolder];
     NSError *error;
     AVCaptureDevice *inactiveVideoDevice = [self inactiveCamera];
     AVCaptureDeviceInput *inactiveVideoInput = [AVCaptureDeviceInput deviceInputWithDevice:inactiveVideoDevice error:&error];
