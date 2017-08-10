@@ -84,6 +84,10 @@
     return self;
 }
 
+- (void)dealloc {
+    if ( _session.isRunning ) [_session stopRunning];
+    NSLog(@"%zd - %s", __LINE__, __func__);
+}
 
 // MARK: Public
 
