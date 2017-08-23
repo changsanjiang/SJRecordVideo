@@ -674,27 +674,40 @@ NSNotificationName const ThumbnailNotification = @"ThumbnailNotification";
  */
 + (void)batchGeneratedImageWithAsset:(AVAsset *)asset interval:(short)interval completion:(void(^)(NSArray<UIImage *> *imageArr))block {
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        NSMutableArray *arrM = [NSMutableArray new];
-        AVAssetImageGenerator *imageGenerator =
-        [AVAssetImageGenerator assetImageGeneratorWithAsset:asset];
-        AVAssetTrack *track = [asset tracksWithMediaType:AVMediaTypeVideo].firstObject;
-        imageGenerator.maximumSize = CGSizeMake(track.naturalSize.width, 0.0);
-        imageGenerator.appliesPreferredTrackTransform = YES;
+        NSMutableArray *timesM = [NSMutableArray new];
         CMTime duration = asset.duration;
         NSInteger second = duration.value / duration.timescale;
         NSInteger count = second / interval;
-        if ( 0 == count ) return;
-        __block short time = 0;
+        if ( 0 == count ) { if ( block ) block(nil); return ;}
+        
         for ( int i = 0 ; i < count ; i ++ ) {
-            CGImageRef imageRef = [imageGenerator copyCGImageAtTime:CMTimeMake(time, 1) actualTime:NULL error:nil];
-            UIImage *image = [UIImage imageWithCGImage:imageRef];
-            CGImageRelease(imageRef);
-            [arrM addObject:image];
-            time += interval;
+            CMTime time = CMTimeMake(i * interval, 1);
+            [timesM addObject:[NSValue valueWithCMTime:time]];
         }
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if ( block ) block(arrM.copy);
-        });
+        
+        __block NSUInteger imageCount = timesM.count;
+        __block NSMutableArray *imagesM = [NSMutableArray new];
+        
+        AVAssetImageGeneratorCompletionHandler handler;
+        handler = ^(CMTime requestedTime, CGImageRef imageRef, CMTime actualTime, AVAssetImageGeneratorResult result, NSError *error) {
+            if ( result == AVAssetImageGeneratorSucceeded ) {
+                UIImage *image = [UIImage imageWithCGImage:imageRef];
+                if ( image ) [imagesM addObject:image];
+            }
+            else {
+                NSLog(@"ERROR : %@", [error localizedDescription]);
+                NSLog(@"ERROR : %@", [error localizedDescription]);
+                NSLog(@"ERROR : %@", [error localizedDescription]);
+            }
+            
+            if ( --imageCount == 0 ) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if ( block ) block(imagesM);
+                });
+            }
+        };
+        
+        [[AVAssetImageGenerator assetImageGeneratorWithAsset:asset] generateCGImagesAsynchronouslyForTimes:timesM completionHandler:handler];
     });
 }
 @end
