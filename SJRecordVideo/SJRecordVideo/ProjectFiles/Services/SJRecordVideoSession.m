@@ -707,7 +707,9 @@ NSNotificationName const ThumbnailNotification = @"ThumbnailNotification";
             }
         };
         
-        [[AVAssetImageGenerator assetImageGeneratorWithAsset:asset] generateCGImagesAsynchronouslyForTimes:timesM completionHandler:handler];
+        AVAssetImageGenerator *generator = [AVAssetImageGenerator assetImageGeneratorWithAsset:asset];
+        generator.appliesPreferredTrackTransform = YES;
+        [generator generateCGImagesAsynchronouslyForTimes:timesM completionHandler:handler];
     });
 }
 @end
