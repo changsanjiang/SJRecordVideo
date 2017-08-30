@@ -16,8 +16,6 @@
 
 #import <objc/message.h>
 
-#import "SJRecordVideoSource.h"
-
 #import "UIView+Extension.h"
 
 // MARK: 观察处理
@@ -81,7 +79,7 @@
 
 - (void)setIsRecording:(BOOL)isRecording {
     _isRecording = isRecording;
-   
+    
     // 开始录制
     if ( _isRecording ) {
         NSLog(@"开始录制");
@@ -93,7 +91,7 @@
         [_observeTimer invalidate];
         _observeTimer = nil;
     }
-
+    
     self.recordBtn.selected = isRecording;
 }
 
@@ -186,7 +184,6 @@
     }];
 }
 
-
 // MARK: Getter
 
 - (NSInteger)recordedDuration {
@@ -226,7 +223,7 @@
     self.backgroundColor = [UIColor colorWithWhite:0.2 alpha:0.5];
     self.durationProgressView.trackTintColor = [UIColor colorWithWhite:1 alpha:0.2];
     self.durationProgressView.progressTintColor = [UIColor redColor];
-
+    
     [self addSubview:self.durationProgressView];
     [self addSubview:self.recordBtn];
     [self addSubview:self.durationLabel];
@@ -288,10 +285,10 @@
 
 - (UIButton *)recordBtn {
     if ( _recordBtn ) return _recordBtn;
-    _recordBtn = [UIButton buttonWithImageName:SJGetFileWithName(@"sj_record_video_start")
+    _recordBtn = [UIButton buttonWithImageName:@"sj_record_video_start"
                                            tag:SJRecordControlAreaViewBtnTagRecord
                                         target:self sel:@selector(clickedBtn:)];
-    [_recordBtn setImage:[UIImage imageNamed:SJGetFileWithName(@"sj_record_video_pause")] forState:UIControlStateSelected];
+    [_recordBtn setImage:[UIImage imageNamed:@"sj_record_video_pause"] forState:UIControlStateSelected];
     return _recordBtn;
 }
 
@@ -311,7 +308,7 @@
 
 - (UIButton *)localVideoBtn {
     if ( _localVideoBtn ) return _localVideoBtn;
-    _localVideoBtn = [UIButton buttonWithImageName:SJGetFileWithName(@"sj_record_video_local")
+    _localVideoBtn = [UIButton buttonWithImageName:@"sj_record_video_local"
                                                tag:SJRecordControlAreaViewBtnTagLocal
                                             target:self
                                                sel:@selector(clickedBtn:)];
@@ -320,7 +317,7 @@
 
 - (UIButton *)completeBtn {
     if ( _completeBtn ) return _completeBtn;
-    _completeBtn = [UIButton buttonWithImageName:SJGetFileWithName(@"sj_record_video_end")
+    _completeBtn = [UIButton buttonWithImageName:@"sj_record_video_end"
                                              tag:SJRecordControlAreaViewBtnTagEnd
                                           target:self
                                              sel:@selector(clickedBtn:)];
@@ -330,7 +327,7 @@
 
 - (UIButton *)deleteBtn {
     if ( _deleteBtn ) return _deleteBtn;
-    _deleteBtn = [UIButton buttonWithImageName:SJGetFileWithName(@"sj_record_video_del")
+    _deleteBtn = [UIButton buttonWithImageName:@"sj_record_video_del"
                                            tag:SJRecordControlAreaViewBtnTagDel
                                         target:self
                                            sel:@selector(clickedBtn:)];
@@ -362,7 +359,7 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             _self.rec += 0.1;
         });
-
+        
     };
     _observeTimer = [NSTimer sj_scheduledTimerWithTimeInterval:0.1 exeBlock:exeBlock repeats:YES];
     return _observeTimer;
@@ -429,7 +426,7 @@
             [_observeTimer invalidate];
             _observeTimer = nil;
         }
-
+        
     }
 }
 
@@ -478,8 +475,15 @@
 
 - (void)setExeSelectTime1Block:(void (^)())exeSelectTime1Block {
     objc_setAssociatedObject(self, @selector(exeSelectTime1Block), exeSelectTime1Block, OBJC_ASSOCIATION_COPY_NONATOMIC);
-    self.selectRecordTimeView.clickedBtn1Block = exeSelectTime1Block;
-
+    void(^block)() = [exeSelectTime1Block copy];
+    __weak typeof(self) _self = self;
+    self.exeSelectTime1Block = ^{
+        __strong typeof(_self) self = _self;
+        if ( !self ) return;
+        if ( block ) block();
+        self.selectRecordTimeView.clickedBtn1Block = exeSelectTime1Block;
+        self.selectedIndex = 0;
+    };
 }
 
 - (void (^)())exeSelectTime1Block {
@@ -488,12 +492,27 @@
 
 - (void)setExeSelectTime2Block:(void (^)())exeSelectTime2Block {
     objc_setAssociatedObject(self, @selector(exeSelectTime2Block), exeSelectTime2Block, OBJC_ASSOCIATION_COPY_NONATOMIC);
-    self.selectRecordTimeView.clickedBtn2Block = exeSelectTime2Block;
-
+    void(^block)() = [exeSelectTime2Block copy];
+    __weak typeof(self) _self = self;
+    self.exeSelectTime2Block = ^{
+        __strong typeof(_self) self = _self;
+        if ( !self ) return;
+        if ( block ) block();
+        self.selectRecordTimeView.clickedBtn2Block = exeSelectTime2Block;
+        self.selectedIndex = 1;
+    };
 }
 
 - (void (^)())exeSelectTime2Block {
     return objc_getAssociatedObject(self, _cmd);
+}
+
+- (void)setSelectedIndex:(short)selectedIndex {
+    objc_setAssociatedObject(self, @selector(selectedIndex), @(selectedIndex), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (short)selectedIndex {
+    return [objc_getAssociatedObject(self, _cmd) shortValue];
 }
 
 @end

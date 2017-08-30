@@ -97,6 +97,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readwrite, nullable) void(^exeSelectTime1Block)();
 @property (nonatomic, copy, readwrite, nullable) void(^exeSelectTime2Block)();
 
+/*!
+ *  0 or 1.
+ *  0 is selectedTime1.
+ *  1 is selectedTime2.
+ */
+@property (nonatomic, assign, readonly) short selectedIndex;
+
 @end
 
 NS_ASSUME_NONNULL_END
