@@ -477,11 +477,10 @@
     objc_setAssociatedObject(self, @selector(exeSelectTime1Block), exeSelectTime1Block, OBJC_ASSOCIATION_COPY_NONATOMIC);
     void(^block)() = [exeSelectTime1Block copy];
     __weak typeof(self) _self = self;
-    self.exeSelectTime1Block = ^{
+    self.selectRecordTimeView.clickedBtn1Block = ^{
         __strong typeof(_self) self = _self;
         if ( !self ) return;
         if ( block ) block();
-        self.selectRecordTimeView.clickedBtn1Block = exeSelectTime1Block;
         self.selectedIndex = 0;
     };
 }
@@ -494,11 +493,10 @@
     objc_setAssociatedObject(self, @selector(exeSelectTime2Block), exeSelectTime2Block, OBJC_ASSOCIATION_COPY_NONATOMIC);
     void(^block)() = [exeSelectTime2Block copy];
     __weak typeof(self) _self = self;
-    self.exeSelectTime2Block = ^{
+    self.selectRecordTimeView.clickedBtn2Block = ^{
         __strong typeof(_self) self = _self;
         if ( !self ) return;
         if ( block ) block();
-        self.selectRecordTimeView.clickedBtn2Block = exeSelectTime2Block;
         self.selectedIndex = 1;
     };
 }
