@@ -18,6 +18,8 @@
 
 #import "UIView+Extension.h"
 
+#import "SJRecordVideoSource.h"
+
 // MARK: 观察处理
 
 @interface SJRecordControlAreaView (DBObservers)
@@ -285,10 +287,10 @@
 
 - (UIButton *)recordBtn {
     if ( _recordBtn ) return _recordBtn;
-    _recordBtn = [UIButton buttonWithImageName:@"sj_record_video_start"
+    _recordBtn = [UIButton buttonWithImageName:SJGetFileWithName(@"sj_record_video_start")
                                            tag:SJRecordControlAreaViewBtnTagRecord
                                         target:self sel:@selector(clickedBtn:)];
-    [_recordBtn setImage:[UIImage imageNamed:@"sj_record_video_pause"] forState:UIControlStateSelected];
+    [_recordBtn setImage:[UIImage imageNamed:SJGetFileWithName(@"sj_record_video_pause")] forState:UIControlStateSelected];
     return _recordBtn;
 }
 
