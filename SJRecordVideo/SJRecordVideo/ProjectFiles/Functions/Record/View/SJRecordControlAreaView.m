@@ -310,7 +310,7 @@
 
 - (UIButton *)localVideoBtn {
     if ( _localVideoBtn ) return _localVideoBtn;
-    _localVideoBtn = [UIButton buttonWithImageName:@"sj_record_video_local"
+    _localVideoBtn = [UIButton buttonWithImageName:SJGetFileWithName(@"sj_record_video_local")
                                                tag:SJRecordControlAreaViewBtnTagLocal
                                             target:self
                                                sel:@selector(clickedBtn:)];
@@ -319,7 +319,7 @@
 
 - (UIButton *)completeBtn {
     if ( _completeBtn ) return _completeBtn;
-    _completeBtn = [UIButton buttonWithImageName:@"sj_record_video_end"
+    _completeBtn = [UIButton buttonWithImageName:SJGetFileWithName(@"sj_record_video_end")
                                              tag:SJRecordControlAreaViewBtnTagEnd
                                           target:self
                                              sel:@selector(clickedBtn:)];
@@ -329,7 +329,7 @@
 
 - (UIButton *)deleteBtn {
     if ( _deleteBtn ) return _deleteBtn;
-    _deleteBtn = [UIButton buttonWithImageName:@"sj_record_video_del"
+    _deleteBtn = [UIButton buttonWithImageName:SJGetFileWithName(@"sj_record_video_del")
                                            tag:SJRecordControlAreaViewBtnTagDel
                                         target:self
                                            sel:@selector(clickedBtn:)];
