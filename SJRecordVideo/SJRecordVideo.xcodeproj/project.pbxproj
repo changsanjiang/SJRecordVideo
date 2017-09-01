@@ -30,6 +30,8 @@
 		77C420B11F59039400DBF9E3 /* SJRecordVideoSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 77C4209F1F59039400DBF9E3 /* SJRecordVideoSession.m */; };
 		77C420BB1F59040400DBF9E3 /* SJRecordVideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77C420B81F59040400DBF9E3 /* SJRecordVideoViewController.m */; };
 		77C420BF1F59042E00DBF9E3 /* SJRecordVideoAssets.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 77C420BD1F59042E00DBF9E3 /* SJRecordVideoAssets.bundle */; };
+		77C420C21F5904B600DBF9E3 /* SJRecordVideoServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 77C420C11F5904B600DBF9E3 /* SJRecordVideoServer.m */; };
+		77C420C81F591AC500DBF9E3 /* GPUImageBeautifyFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 77C420C71F591AC500DBF9E3 /* GPUImageBeautifyFilter.m */; };
 		B0C482B4C68FF235FA94D27B /* libPods-SJRecordVideo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C06A814406A9E81060980631 /* libPods-SJRecordVideo.a */; };
 /* End PBXBuildFile section */
 
@@ -79,6 +81,10 @@
 		77C420B81F59040400DBF9E3 /* SJRecordVideoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SJRecordVideoViewController.m; sourceTree = "<group>"; };
 		77C420BD1F59042E00DBF9E3 /* SJRecordVideoAssets.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = SJRecordVideoAssets.bundle; sourceTree = "<group>"; };
 		77C420BE1F59042E00DBF9E3 /* SJRecordVideoSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SJRecordVideoSource.h; sourceTree = "<group>"; };
+		77C420C01F5904B600DBF9E3 /* SJRecordVideoServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SJRecordVideoServer.h; sourceTree = "<group>"; };
+		77C420C11F5904B600DBF9E3 /* SJRecordVideoServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SJRecordVideoServer.m; sourceTree = "<group>"; };
+		77C420C61F591AC500DBF9E3 /* GPUImageBeautifyFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPUImageBeautifyFilter.h; sourceTree = "<group>"; };
+		77C420C71F591AC500DBF9E3 /* GPUImageBeautifyFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPUImageBeautifyFilter.m; sourceTree = "<group>"; };
 		962D501CD75708C1E48142E8 /* Pods-SJRecordVideo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SJRecordVideo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SJRecordVideo/Pods-SJRecordVideo.debug.xcconfig"; sourceTree = "<group>"; };
 		C06A814406A9E81060980631 /* libPods-SJRecordVideo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SJRecordVideo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC5BA3934B449C0167784770 /* Pods-SJRecordVideo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SJRecordVideo.release.xcconfig"; path = "Pods/Target Support Files/Pods-SJRecordVideo/Pods-SJRecordVideo.release.xcconfig"; sourceTree = "<group>"; };
@@ -361,6 +367,10 @@
 		77C420BA1F59040400DBF9E3 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				77C420C61F591AC500DBF9E3 /* GPUImageBeautifyFilter.h */,
+				77C420C71F591AC500DBF9E3 /* GPUImageBeautifyFilter.m */,
+				77C420C01F5904B600DBF9E3 /* SJRecordVideoServer.h */,
+				77C420C11F5904B600DBF9E3 /* SJRecordVideoServer.m */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -524,8 +534,10 @@
 				77C420B01F59039400DBF9E3 /* AVAsset+Extension.m in Sources */,
 				77C420AE1F59039400DBF9E3 /* SJRecordControlHeaderView.m in Sources */,
 				77C420A81F59039400DBF9E3 /* SJSelectLovalVideoViewController.m in Sources */,
+				77C420C81F591AC500DBF9E3 /* GPUImageBeautifyFilter.m in Sources */,
 				77C420AF1F59039400DBF9E3 /* SJSelectRecordTimeView.m in Sources */,
 				77C420A51F59039400DBF9E3 /* NSTimer+Extension.m in Sources */,
+				77C420C21F5904B600DBF9E3 /* SJRecordVideoServer.m in Sources */,
 				77C420BB1F59040400DBF9E3 /* SJRecordVideoViewController.m in Sources */,
 				77C420B11F59039400DBF9E3 /* SJRecordVideoSession.m in Sources */,
 				77BF9ED01F334254008A4735 /* SJViewController.m in Sources */,
