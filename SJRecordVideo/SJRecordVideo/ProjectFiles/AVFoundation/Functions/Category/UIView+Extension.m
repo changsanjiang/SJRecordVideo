@@ -176,6 +176,14 @@
     return self.center.y;
 }
 
+- (CGFloat)csj_MaxX {
+    return self.csj_x + self.csj_w;
+}
+
+- (CGFloat)csj_MaxY {
+    return self.csj_y + self.csj_h;
+}
+
 - (void)csj_cornerRadius {
     CGFloat min = MIN(self.csj_w, self.csj_h);
     self.layer.cornerRadius  = min * 0.5;

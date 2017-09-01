@@ -18,6 +18,10 @@
 @property (nonatomic, assign) CGFloat csj_centerX;
 @property (nonatomic, assign) CGFloat csj_centerY;
 
+@property (nonatomic, assign, readonly) CGFloat csj_MaxX;
+@property (nonatomic, assign, readonly) CGFloat csj_MaxY;
+
+
 @property (nonatomic, strong, readonly) UIImage *csj_currentSnapshot;
 @property (nonatomic, strong, readonly) UIViewController *csj_viewController;
 
