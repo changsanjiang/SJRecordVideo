@@ -1,15 +1,18 @@
 PODS:
+  - GPUImage (0.1.7)
   - Masonry (1.0.2)
   - SVProgressHUD (2.1.2)
 
 DEPENDENCIES:
+  - GPUImage
   - Masonry
   - SVProgressHUD
 
 SPEC CHECKSUMS:
+  GPUImage: 733a5f0fab92df9de1c37ba9df520a833ccb406d
   Masonry: 7c429b56da9d4ee0bbb3ed77a5ea710d6a5df39e
   SVProgressHUD: c404a55d78acbeb7ebb78b76d3faf986475a6994
 
-PODFILE CHECKSUM: 1c552c96470b7af8baa81eee12ba756095335a9e
+PODFILE CHECKSUM: 097e8198d950d9484ff8f9feca6e8d7eb953fb75
 
 COCOAPODS: 1.2.0

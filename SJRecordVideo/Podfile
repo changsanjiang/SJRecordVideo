@@ -9,4 +9,5 @@ target 'SJRecordVideo' do
 
   pod 'Masonry'
   pod 'SVProgressHUD'
+  pod 'GPUImage'
 end

@@ -1,8 +1,9 @@
+CLANG_MODULES_AUTOLINK = YES
 GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
-HEADER_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/Masonry" "${PODS_ROOT}/Headers/Public/SVProgressHUD"
-LIBRARY_SEARCH_PATHS = $(inherited) "$PODS_CONFIGURATION_BUILD_DIR/Masonry" "$PODS_CONFIGURATION_BUILD_DIR/SVProgressHUD"
-OTHER_CFLAGS = $(inherited) -isystem "${PODS_ROOT}/Headers/Public" -isystem "${PODS_ROOT}/Headers/Public/Masonry" -isystem "${PODS_ROOT}/Headers/Public/SVProgressHUD"
-OTHER_LDFLAGS = $(inherited) -ObjC -l"Masonry" -l"SVProgressHUD" -framework "Foundation" -framework "QuartzCore" -framework "UIKit"
+HEADER_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/GPUImage" "${PODS_ROOT}/Headers/Public/Masonry" "${PODS_ROOT}/Headers/Public/SVProgressHUD"
+LIBRARY_SEARCH_PATHS = $(inherited) "$PODS_CONFIGURATION_BUILD_DIR/GPUImage" "$PODS_CONFIGURATION_BUILD_DIR/Masonry" "$PODS_CONFIGURATION_BUILD_DIR/SVProgressHUD"
+OTHER_CFLAGS = $(inherited) -isystem "${PODS_ROOT}/Headers/Public" -isystem "${PODS_ROOT}/Headers/Public/GPUImage" -isystem "${PODS_ROOT}/Headers/Public/Masonry" -isystem "${PODS_ROOT}/Headers/Public/SVProgressHUD"
+OTHER_LDFLAGS = $(inherited) -ObjC -l"GPUImage" -l"Masonry" -l"SVProgressHUD" -framework "AVFoundation" -framework "CoreMedia" -framework "Foundation" -framework "OpenGLES" -framework "QuartzCore" -framework "UIKit"
 PODS_BUILD_DIR = $BUILD_DIR
 PODS_CONFIGURATION_BUILD_DIR = $PODS_BUILD_DIR/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)
 PODS_ROOT = ${SRCROOT}/Pods

@@ -402,7 +402,7 @@
 
 - (void)exportAssets:(AVAsset *)asset presetName:(NSString *)presetName maxDuration:(NSInteger)duration direction:(short)direction completionHandle:(void (^)(AVAsset *, UIImage *))block {
 
-    NSInteger sourceDuration = asset.duration.value / asset.duration.timescale;
+    long long sourceDuration = asset.duration.value / asset.duration.timescale;
     if ( sourceDuration < duration ) {
         [self exportAssets:asset completionHandle:block];
         return;
@@ -676,8 +676,8 @@ NSNotificationName const ThumbnailNotification = @"ThumbnailNotification";
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         NSMutableArray *timesM = [NSMutableArray new];
         CMTime duration = asset.duration;
-        NSInteger second = duration.value / duration.timescale;
-        NSInteger count = second / interval;
+        long long second = duration.value / duration.timescale;
+        NSInteger count = (NSInteger)(second / interval);
         if ( 0 == count ) { if ( block ) block(nil); return ;}
         
         for ( int i = 0 ; i < count ; i ++ ) {
@@ -745,6 +745,12 @@ NSNotificationName const ThumbnailNotification = @"ThumbnailNotification";
         }
         
         [self.session commitConfiguration];
+        
+        CATransition *anima = [CATransition new];
+        anima.type = @"oglFlip";
+        anima.subtype = @"fromLeft";
+        anima.duration = 0.5;
+        [self.previewView.layer addAnimation:anima forKey:@"SwitchAnima"];
     }
     else {
         if ( [self.delegate respondsToSelector:@selector(deviceConfigurationFailedWithError:)] ) [self.delegate deviceConfigurationFailedWithError:error];
