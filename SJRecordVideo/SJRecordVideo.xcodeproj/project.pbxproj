@@ -43,7 +43,6 @@
 		77BF9E801F33045D008A4735 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		77BF9E831F33045D008A4735 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		77BF9E851F33045D008A4735 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		77BF9EB21F331BE5008A4735 /* SJRecordVideoHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SJRecordVideoHeader.h; sourceTree = "<group>"; };
 		77BF9ECE1F334254008A4735 /* SJViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SJViewController.h; sourceTree = "<group>"; };
 		77BF9ECF1F334254008A4735 /* SJViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SJViewController.m; sourceTree = "<group>"; };
 		77BF9EEA1F335142008A4735 /* sample1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sample1.png; sourceTree = "<group>"; };
@@ -148,7 +147,6 @@
 		77BF9E8B1F330684008A4735 /* 工程文件 */ = {
 			isa = PBXGroup;
 			children = (
-				77BF9EB21F331BE5008A4735 /* SJRecordVideoHeader.h */,
 				77BF9ECE1F334254008A4735 /* SJViewController.h */,
 				77BF9ECF1F334254008A4735 /* SJViewController.m */,
 				77C420B31F59040400DBF9E3 /* GPUImage */,
