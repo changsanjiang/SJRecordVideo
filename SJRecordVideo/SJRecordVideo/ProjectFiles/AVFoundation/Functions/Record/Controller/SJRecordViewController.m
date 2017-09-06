@@ -94,7 +94,7 @@
         case SJRecordControlAreaViewBtnTagEnd: {
             
             // 是否超过了设置的最短时间. 否则 return.
-            if ( self.areaView.recordedDuration <= self.areaView.minDuration ) return;
+            if ( self.areaView.recordedDuration < self.areaView.minDuration ) return;
             
             // 停止 并导出
             [self _stoppedAndExport];
