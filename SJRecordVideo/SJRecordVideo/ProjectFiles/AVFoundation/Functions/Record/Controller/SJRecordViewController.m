@@ -18,6 +18,181 @@
 
 #import <SVProgressHUD.h>
 
+
+#pragma mark -
+
+@interface SJRecordViewController ()
+
+@property (nonatomic, strong, readonly) SJRecordControlHeaderView *headerView;
+@property (nonatomic, strong, readonly) SJRecordControlAreaView *areaView;
+@property (nonatomic, strong, readonly) SJRecordVideoSession *session;
+
+@property (nonatomic, assign, readwrite) BOOL isRecording;
+@property (nonatomic, assign, readwrite) UIDeviceOrientation recordingOrientation;
+
+@property (nonatomic, strong, readonly) UIView *fullMaskView;
+
+@end
+
+
+#pragma mark -
+
+@interface SJRecordViewController (SJRecordVideoSessionDelegateMethods)<SJRecordVideoSessionDelegate>
+
+@end
+
+@implementation SJRecordViewController (SJRecordVideoSessionDelegateMethods)
+
+// 导出进度
+- (void)session:(SJRecordVideoSession *)session exportProgress:(CGFloat)progress {
+    NSLog(@"exportProgress: %f", progress);
+    if ( progress == 1 ) {[SVProgressHUD dismiss]; return;}
+    [SVProgressHUD showProgress:progress status:@"正在导出.."];
+}
+
+- (void)cancelExportWithSession:(SJRecordVideoSession *)session {
+    [SVProgressHUD dismiss];
+}
+
+@end
+
+
+#pragma mark -
+
+@interface SJRecordViewController (SJRecordControlAreaViewDelegateMethods)<SJRecordControlAreaViewDelegate>
+
+@end
+
+#import "SJRecordVideoEnumHeader.h"
+
+#import "SJVideoInfoEditingViewController.h"
+
+#import "SJSelectLovalVideoViewController.h"
+
+@implementation SJRecordViewController (SJRecordControlAreaViewDelegateMethods)
+
+- (void)areaView:(SJRecordControlAreaView *)view clickedBtnTag:(SJRecordControlAreaViewBtnTag)tag {
+    switch (tag) {
+            
+            /*!
+             *  点击 录制 按钮
+             */
+        case SJRecordControlAreaViewBtnTagRecord: {
+            
+            // 如果超过了设置的最长录制时间. return
+            if ( self.areaView.recordedDuration >= self.areaView.maxDuration && !self.isRecording ) return;
+            
+            
+            // notice observer method. 注意观察者方法
+            self.isRecording = !self.isRecording;
+        }
+            break;
+            
+            /*!
+             *  点击 ✅ 按钮
+             */
+        case SJRecordControlAreaViewBtnTagEnd: {
+            
+            // 是否超过了设置的最短时间. 否则 return.
+            if ( self.areaView.recordedDuration <= self.areaView.minDuration ) return;
+            
+            // 停止 并导出
+            [self _stoppedAndExport];
+            
+        }
+            break;
+            
+            /*!
+             *  点击 ❌ 按钮
+             */
+        case SJRecordControlAreaViewBtnTagDel: {
+            
+            [self _stoppedAndCancel];
+        }
+            break;
+            /*!
+             *  点击 本地 按钮
+             */
+        case SJRecordControlAreaViewBtnTagLocal: {
+
+            [self _jumpLocalVideo];
+        }
+            break;
+    }
+}
+
+
+- (void)_stoppedAndExport {
+    
+    // stop
+    [self _resetParameters];
+    
+    // export
+    [SVProgressHUD showWithStatus:@"准备导出"];
+    [self.view addSubview:self.fullMaskView];
+    SJScreenOrientation direction = SJScreenOrientationLandscape;
+    if ( self.recordingOrientation == UIDeviceOrientationPortrait ) {
+        direction = SJScreenOrientationPortrait;
+    }
+    __weak typeof(self) _self = self;
+    self.areaView.enableRecordBtn = NO;
+    [self.session stopRecordingAndComplate:^(AVAsset *asset, UIImage *coverImage) {
+        [SVProgressHUD dismiss];
+        __strong typeof(_self) self = _self;
+        if ( !self ) return;
+        [self.fullMaskView removeFromSuperview];
+        SJVideoInfoEditingViewController *vc = [[SJVideoInfoEditingViewController alloc] initWithAsset:asset direction:direction];
+        vc.coverImage = coverImage;
+        [self.navigationController pushViewController:vc animated:YES];
+        self.areaView.enableRecordBtn = YES;
+    }];
+}
+
+- (void)_stoppedAndCancel {
+    
+    // stop
+    [self _resetParameters];
+    
+    [SVProgressHUD showWithStatus:@"正在取消"];
+    [self.view addSubview:self.fullMaskView];
+    
+    // cancel
+    __weak typeof(self) _self = self;
+    [self.session resetRecordingAndCallBlock:^{
+        [SVProgressHUD dismiss];
+        __strong typeof(_self) self = _self;
+        if ( !self ) return;
+        [self.fullMaskView removeFromSuperview];
+    }];
+}
+
+- (void)_jumpLocalVideo {
+    SJSelectLovalVideoViewController *vc = [[SJSelectLovalVideoViewController alloc] initWithSession:self.session];
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+- (void)_resetParameters {
+    [self.areaView resetDuration];
+    self.recordingOrientation = UIDeviceOrientationPortrait;
+    self.isRecording = NO;
+}
+
+// 录制到达设置的最高设置时间
+- (void)arrivedMaxDurationAreaView:(SJRecordControlAreaView *)view {
+    [self.session pauseRecordingAndComplete:^{
+        self.isRecording = NO;
+        self.areaView.enableRecordBtn = NO;
+    }];
+}
+
+@end
+
+
+
+@interface SJRecordViewController (SJRecordControlHeaderViewDelegetaMethods)<SJRecordControlHeaderViewDelegeta>
+
+@end
+
 // MARK: 通知处理
 
 @interface SJRecordViewController (DBNotifications)
@@ -41,33 +216,8 @@
 @end
 
 
-@interface SJRecordViewController (SJRecordVideoSessionDelegateMethods)<SJRecordVideoSessionDelegate>
 
-@end
-
-
-@interface SJRecordViewController (SJRecordControlAreaViewDelegateMethods)<SJRecordControlAreaViewDelegate>
-
-@end
-
-
-@interface SJRecordViewController (SJRecordControlHeaderViewDelegetaMethods)<SJRecordControlHeaderViewDelegeta>
-
-@end
-
-@interface SJRecordViewController ()
-
-@property (nonatomic, strong, readonly) SJRecordControlHeaderView *headerView;
-@property (nonatomic, strong, readonly) SJRecordControlAreaView *areaView;
-
-@property (nonatomic, strong, readonly) SJRecordVideoSession *session;
-
-@property (nonatomic, assign, readwrite) BOOL isRecording;
-@property (nonatomic, assign, readwrite) UIDeviceOrientation recordingOrientation;
-
-@property (nonatomic, strong, readonly) UIView *fullMaskView;
-
-@end
+#pragma mark -
 
 @implementation SJRecordViewController
 
@@ -89,7 +239,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [self _SJRecordViewControllerSetupUI];
+    [self _sjSetupView];
     
     // Do any additional setup after loading the view.
 }
@@ -97,7 +247,7 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.navigationController setNavigationBarHidden:YES animated:YES];
-    
+    // 录制方向归位
     self.recordingOrientation = [UIDevice currentDevice].orientation;
 }
 
@@ -115,7 +265,7 @@
 
 // MARK: UI
 
-- (void)_SJRecordViewControllerSetupUI {
+- (void)_sjSetupView {
     
     [self.view addSubview:self.session.previewView];
     self.session.previewView.frame = self.view.bounds;
@@ -132,8 +282,10 @@
         make.height.equalTo(self.view).multipliedBy(0.25);
     }];
     
+    
     // MARK: Mix UI + Block Start target: AreaView
     
+    // 开启选择模式
     _areaView.showSelectTimeView = YES;
     _areaView.selectTimeTitle1 = @"15秒MV";
     _areaView.selectTimeTitle2 = @"3分钟";
@@ -142,6 +294,7 @@
     _areaView.exeSelectTime1Block = ^{
         _self.areaView.minDuration = 5;
         _self.areaView.maxDuration = 15;
+        // 设置完时间 更新一下标记位置
         [_self.areaView updateRecordFlagLocation];
     };
     
@@ -191,109 +344,6 @@
     return _session;
 }
 
-
-@end
-
-#import "SJRecordVideoEnumHeader.h"
-
-#import "SJVideoInfoEditingViewController.h"
-
-#import "SJSelectLovalVideoViewController.h"
-
-@implementation SJRecordViewController (SJRecordControlAreaViewDelegateMethods)
-
-- (void)areaView:(SJRecordControlAreaView *)view clickedBtnTag:(SJRecordControlAreaViewBtnTag)tag {
-    switch (tag) {
-        case SJRecordControlAreaViewBtnTagRecord: {
-            // start
-            if ( self.areaView.recordedDuration >= self.areaView.maxDuration && !self.isRecording ) return;
-            if ( !self.isRecording ) {
-                AVCaptureVideoOrientation orientation = AVCaptureVideoOrientationPortrait;
-                switch (_recordingOrientation) {
-                    case UIDeviceOrientationLandscapeLeft: {
-                        orientation = AVCaptureVideoOrientationLandscapeLeft;
-                    }
-                        break;
-                        
-                    case UIDeviceOrientationLandscapeRight: {
-                        orientation = AVCaptureVideoOrientationLandscapeRight;
-                    }
-                        break;
-                        
-                    case UIDeviceOrientationPortrait: {
-                        orientation = AVCaptureVideoOrientationPortrait;
-                    }
-                        break;
-                    default:
-                        break;
-                }
-                [self.session startRecordingWithOrientation:orientation];
-                self.isRecording = YES;
-            }
-            else {
-                [self.session pauseRecordingAndComplete:nil];
-                self.isRecording = NO;
-            }
-        }
-            break;
-        case SJRecordControlAreaViewBtnTagEnd: {
-            // stop
-            if ( self.areaView.recordedDuration >= self.areaView.minDuration ) {
-                [SVProgressHUD showWithStatus:@"准备导出"];
-                [self.view addSubview:self.fullMaskView];
-                SJScreenOrientation direction = SJScreenOrientationLandscape;
-                if ( self.recordingOrientation == UIDeviceOrientationPortrait ) {
-                    direction = SJScreenOrientationPortrait;
-                }
-                [self resetParameters];
-                __weak typeof(self) _self = self;
-                self.areaView.enableRecordBtn = NO;
-                [self.session stopRecordingAndComplate:^(AVAsset *asset, UIImage *coverImage) {
-                    [SVProgressHUD dismiss];
-                    __strong typeof(_self) self = _self;
-                    if ( !self ) return;
-                    [self.fullMaskView removeFromSuperview];
-                    SJVideoInfoEditingViewController *vc = [[SJVideoInfoEditingViewController alloc] initWithAsset:asset direction:direction];
-                    vc.coverImage = coverImage;
-                    [self.navigationController pushViewController:vc animated:YES];
-                    self.areaView.enableRecordBtn = YES;
-                }];
-            }
-        }
-            break;
-        case SJRecordControlAreaViewBtnTagLocal: {
-            SJSelectLovalVideoViewController *vc = [[SJSelectLovalVideoViewController alloc] initWithSession:self.session];
-            [self.navigationController pushViewController:vc animated:YES];
-        }
-            break;
-        case SJRecordControlAreaViewBtnTagDel: {
-            [SVProgressHUD showWithStatus:@"正在取消"];
-            [self resetParameters];
-            [self.view addSubview:self.fullMaskView];
-            __weak typeof(self) _self = self;
-            [self.session resetRecordingAndCallBlock:^{
-                [SVProgressHUD dismiss];
-                __strong typeof(_self) self = _self;
-                if ( !self ) return;
-                [self.fullMaskView removeFromSuperview];
-            }];
-        }
-            break;
-    }
-}
-
-- (void)resetParameters {
-    [self.areaView resetDuration];
-    self.recordingOrientation = UIDeviceOrientationPortrait;
-    self.isRecording = NO;
-}
-
-- (void)arrivedMaxDurationAreaView:(SJRecordControlAreaView *)view {
-    [self.session pauseRecordingAndComplete:^{
-        self.isRecording = NO;
-        self.areaView.enableRecordBtn = NO;
-    }];
-}
 
 @end
 
@@ -423,11 +473,38 @@
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
     if ( [keyPath isEqualToString:@"isRecording"] ) {
         self.areaView.isRecording = self.isRecording;
+        
+        // 录制中
         if ( _isRecording ) {
             self.headerView.hiddenTorch = YES;
             self.headerView.hiddenCapture = YES;
+            
+            // 开始录制
+            // 确定录制方向
+            AVCaptureVideoOrientation orientation = AVCaptureVideoOrientationPortrait;
+            switch (self.recordingOrientation) {
+                case UIDeviceOrientationLandscapeLeft:
+                    orientation = AVCaptureVideoOrientationLandscapeLeft;
+                    break;
+                case UIDeviceOrientationLandscapeRight:
+                    orientation = AVCaptureVideoOrientationLandscapeRight;
+                    break;
+                case UIDeviceOrientationPortrait:
+                    orientation = AVCaptureVideoOrientationPortrait;
+                    break;
+                default:
+                    break;
+            }
+            
+            // 开始录制
+            if ( 0 == self.areaView.recordedDuration ) [self.session startRecordingWithOrientation:orientation];
+            else [self.session resumeRecording];
         }
+        
+        // 暂停录制
         else {
+            [self.session pauseRecordingAndComplete:nil];
+
             if ( 0 == self.areaView.recordedDuration ) {
                 self.headerView.hiddenTorch = (self.session.cameraPosition == AVCaptureDevicePositionFront);
                 self.headerView.hiddenCapture = NO;
@@ -442,29 +519,6 @@
         self.headerView.recordingOrientation = _recordingOrientation;
         self.areaView.recordingOrientation = _recordingOrientation;
     }
-}
-
-@end
-
-
-
-
-
-
-
-// MARK: 转码进度
-
-
-@implementation SJRecordViewController (SJRecordVideoSessionDelegateMethods)
-
-- (void)session:(SJRecordVideoSession *)session exportProgress:(CGFloat)progress {
-    NSLog(@"exportProgress: %f", progress);
-    if ( progress == 1 ) {[SVProgressHUD dismiss]; return;}
-    [SVProgressHUD showProgress:progress status:@"正在导出.."];
-}
-
-- (void)cancelExportWithSession:(SJRecordVideoSession *)session {
-    [SVProgressHUD dismiss];
 }
 
 @end
