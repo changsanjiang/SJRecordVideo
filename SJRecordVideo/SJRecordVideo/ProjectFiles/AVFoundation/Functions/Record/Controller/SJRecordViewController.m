@@ -478,26 +478,25 @@
         if ( _isRecording ) {
             self.headerView.hiddenTorch = YES;
             self.headerView.hiddenCapture = YES;
-            
             // 开始录制
-            // 确定录制方向
-            AVCaptureVideoOrientation orientation = AVCaptureVideoOrientationPortrait;
-            switch (self.recordingOrientation) {
-                case UIDeviceOrientationLandscapeLeft:
-                    orientation = AVCaptureVideoOrientationLandscapeLeft;
-                    break;
-                case UIDeviceOrientationLandscapeRight:
-                    orientation = AVCaptureVideoOrientationLandscapeRight;
-                    break;
-                case UIDeviceOrientationPortrait:
-                    orientation = AVCaptureVideoOrientationPortrait;
-                    break;
-                default:
-                    break;
+            if ( 0 == self.areaView.recordedDuration ) {
+                // 确定录制方向
+                AVCaptureVideoOrientation orientation = AVCaptureVideoOrientationPortrait;
+                switch (self.recordingOrientation) {
+                    case UIDeviceOrientationLandscapeLeft:
+                        orientation = AVCaptureVideoOrientationLandscapeLeft;
+                        break;
+                    case UIDeviceOrientationLandscapeRight:
+                        orientation = AVCaptureVideoOrientationLandscapeRight;
+                        break;
+                    case UIDeviceOrientationPortrait:
+                        orientation = AVCaptureVideoOrientationPortrait;
+                        break;
+                    default:
+                        break;
+                }
+                [self.session startRecordingWithOrientation:orientation];
             }
-            
-            // 开始录制
-            if ( 0 == self.areaView.recordedDuration ) [self.session startRecordingWithOrientation:orientation];
             else [self.session resumeRecording];
         }
         
