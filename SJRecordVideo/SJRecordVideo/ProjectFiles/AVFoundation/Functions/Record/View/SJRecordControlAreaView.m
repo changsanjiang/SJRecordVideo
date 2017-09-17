@@ -476,6 +476,7 @@
 }
 
 - (void)setExeSelectTime1Block:(void (^)())exeSelectTime1Block {
+    if ( exeSelectTime1Block && self.exeSelectTime1Block != exeSelectTime1Block ) { exeSelectTime1Block();} // refresh first block
     objc_setAssociatedObject(self, @selector(exeSelectTime1Block), exeSelectTime1Block, OBJC_ASSOCIATION_COPY_NONATOMIC);
     void(^block)() = [exeSelectTime1Block copy];
     __weak typeof(self) _self = self;

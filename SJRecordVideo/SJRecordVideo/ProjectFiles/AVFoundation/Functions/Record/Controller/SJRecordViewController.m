@@ -292,7 +292,7 @@
     
     __weak typeof(self) _self = self;
     _areaView.exeSelectTime1Block = ^{
-        _self.areaView.minDuration = 5;
+        _self.areaView.minDuration = 2;
         _self.areaView.maxDuration = 15;
         // 设置完时间 更新一下标记位置
         [_self.areaView updateRecordFlagLocation];
