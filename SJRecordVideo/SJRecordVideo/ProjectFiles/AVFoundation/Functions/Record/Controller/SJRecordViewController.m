@@ -46,7 +46,7 @@
 // 导出进度
 - (void)session:(SJRecordVideoSession *)session exportProgress:(CGFloat)progress {
     NSLog(@"exportProgress: %f", progress);
-    if ( progress == 1 ) {[SVProgressHUD dismiss]; return;}
+    if ( progress >= 1 ) {[SVProgressHUD dismiss]; return;}
     [SVProgressHUD showProgress:progress status:@"正在导出.."];
 }
 

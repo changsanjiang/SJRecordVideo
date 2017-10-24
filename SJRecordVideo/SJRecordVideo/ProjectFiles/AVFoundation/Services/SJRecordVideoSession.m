@@ -413,7 +413,7 @@
     AVMutableCompositionTrack *audioTrackM = [compositionM addMutableTrackWithMediaType:AVMediaTypeAudio preferredTrackID:kCMPersistentTrackID_Invalid];
     AVMutableCompositionTrack *videoTrackM = [compositionM addMutableTrackWithMediaType:AVMediaTypeVideo preferredTrackID:kCMPersistentTrackID_Invalid];
     
-    if ( 1 >= direction ) videoTrackM.preferredTransform = CGAffineTransformMakeRotation(M_PI_2);
+//    if ( 1 >= direction ) videoTrackM.preferredTransform = CGAffineTransformMakeRotation(M_PI_2);
     
     CMTimeRange cutRange = CMTimeRangeMake(kCMTimeZero, CMTimeMake(duration, 1));
     

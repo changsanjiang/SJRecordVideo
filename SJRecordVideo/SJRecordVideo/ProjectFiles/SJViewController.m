@@ -18,11 +18,15 @@
 
 #import "SJRecordVideoViewController.h"
 
+#import "SJTestViewController.h"
+
 @interface SJViewController ()
 
 @property (nonatomic, strong, readonly) UIButton *centerBtn;
 
 @property (nonatomic, strong, readonly) UIButton *GPUImageBtn;
+
+@property (nonatomic, strong, readonly) UIButton *testBtn;
 
 @end
 
@@ -30,6 +34,7 @@
 
 @synthesize centerBtn = _centerBtn;
 @synthesize GPUImageBtn = _GPUImageBtn;
+@synthesize testBtn = _testBtn;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -53,6 +58,9 @@
             vc = [SJRecordVideoViewController new];
         }
             break;
+        case 2: {
+            vc = [SJTestViewController new];
+        }
         default:
             break;
     }
@@ -75,6 +83,11 @@
     [self.view addSubview:self.GPUImageBtn];
     _GPUImageBtn.frame = _centerBtn.frame;
     _GPUImageBtn.csj_y = _centerBtn.csj_MaxY + 20;
+    
+    [self.view addSubview:self.testBtn];
+    _testBtn.frame = _centerBtn.frame;
+    _testBtn.csj_y = _GPUImageBtn.csj_MaxY + 20;
+    
 }
 
 - (UIButton *)centerBtn {
@@ -87,5 +100,11 @@
     if ( _GPUImageBtn ) return _GPUImageBtn;
     _GPUImageBtn = [UIButton buttonWithTitle:@"GPUImage" titleColor:[UIColor blueColor] tag:1 target:self sel:@selector(clickedBtn:) fontSize:14];
     return _GPUImageBtn;
+}
+
+- (UIButton *)testBtn {
+    if ( _testBtn ) return _testBtn;
+    _testBtn = [UIButton buttonWithTitle:@"TestVC" titleColor:[UIColor blueColor] tag:2 target:self sel:@selector(clickedBtn:) fontSize:14];
+    return _testBtn;
 }
 @end

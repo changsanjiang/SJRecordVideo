@@ -130,15 +130,21 @@ static NSString * const SJLocalPreviewCollectionViewCellID = @"SJLocalPreviewCol
 @end
 
 #import "SJVideoInfoEditingViewController.h"
-
+#import <SVProgressHUD.h>
 @implementation SJSelectLovalVideoViewController (UICollectionViewDelegateMethods)
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"clicked item");
+    [SVProgressHUD showWithStatus:@"正在导出, 请耐心等待..."];
     [self.view addSubview:self.exportingMaskView];
     UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
     SJLoalSelectVideoModel *model = [cell valueForKey:@"model"];
     PHVideoRequestOptions *options = [PHVideoRequestOptions new];
+    options.networkAccessAllowed = YES;
+    
+    options.progressHandler = ^(double progress, NSError * _Nullable error, BOOL * _Nonnull stop, NSDictionary * _Nullable info) {
+        [SVProgressHUD showProgress:progress status:@"从iCloud加载中"];
+    };
+    
     __weak typeof(self) _self = self;
     [[PHCachingImageManager defaultManager] requestAVAssetForVideo:model.asset options:options resultHandler:^(AVAsset * _Nullable asset, AVAudioMix * _Nullable audioMix, NSDictionary * _Nullable info) {
         [_self.session exportAssets:asset maxDuration:3 * 60 direction:model.direction completionHandle:^(AVAsset *sandBoxAsset, UIImage *previewImage) {
