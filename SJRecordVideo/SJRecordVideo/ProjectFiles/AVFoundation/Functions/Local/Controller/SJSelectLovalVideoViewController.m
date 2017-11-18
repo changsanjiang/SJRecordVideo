@@ -35,12 +35,14 @@ static NSString * const SJLocalPreviewCollectionViewCellID = @"SJLocalPreviewCol
 @property (nonatomic, strong, readonly) UICollectionView *collectionView;
 @property (nonatomic, strong, readwrite) NSArray<SJLoalSelectVideoModel *> *models;
 @property (nonatomic, strong, readwrite) SJRecordVideoSession *session;
+@property (nonatomic, strong, readonly) UILabel *tipsLabel;
 
 @end
 
 @implementation SJSelectLovalVideoViewController
 
 @synthesize collectionView = _collectionView;
+@synthesize tipsLabel = _tipsLabel;
 
 // MARK: 生命周期
 
@@ -60,27 +62,43 @@ static NSString * const SJLocalPreviewCollectionViewCellID = @"SJLocalPreviewCol
     [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
         switch (status) {
             case PHAuthorizationStatusAuthorized: {
-                PHFetchResult<PHAsset *> *assets = [PHAsset fetchAssetsWithMediaType:PHAssetMediaTypeVideo options:nil];
+                PHFetchOptions *options = [PHFetchOptions new];
+                options.sortDescriptors = @[[[NSSortDescriptor alloc] initWithKey:@"creationDate" ascending:YES]];
+                PHFetchResult<PHAsset *> *assets = [PHAsset fetchAssetsWithMediaType:PHAssetMediaTypeVideo options:options];
+                if ( 0 == assets.count ) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [UIView animateWithDuration:0.25 animations:^{
+                            self.tipsLabel.alpha = 1;
+                        }];
+                    });
+                    return;
+                }
                 PHImageRequestOptions *option = [[PHImageRequestOptions alloc] init];
                 option.resizeMode = PHImageRequestOptionsResizeModeFast;
                 option.networkAccessAllowed = YES;
                 NSMutableArray <SJLoalSelectVideoModel *> *imagesM = [NSMutableArray new];
+                for ( int i = 0 ; i < assets.count ; i ++ ) {
+                    [imagesM addObject:[SJLoalSelectVideoModel new]];
+                }
+                NSMutableArray *tmpArrM = imagesM.mutableCopy;
                 __weak typeof(self) _self = self;
                 [assets enumerateObjectsUsingBlock:^(PHAsset * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                     [[PHCachingImageManager defaultManager] requestImageForAsset:obj targetSize:CGSizeMake([UIScreen mainScreen].bounds.size.width / 2, [UIScreen mainScreen].bounds.size.width / 2) contentMode:PHImageContentModeAspectFill options:option resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
                         if ( ![info[@"PHImageResultIsDegradedKey"] boolValue] ) {
-                            SJLoalSelectVideoModel *model = [SJLoalSelectVideoModel new];
+                            __strong typeof(_self) self = _self;
+                            if ( !self ) return;
+                            SJLoalSelectVideoModel *model = imagesM[idx];
                             model.previewImgae = result;
                             model.duration = obj.duration;
                             model.asset = obj;
                             model.direction = obj.pixelWidth < obj.pixelHeight ? SJScreenOrientationPortrait : SJScreenOrientationLandscape;
-                            [imagesM addObject:model];
-                            if ( imagesM.count != assets.count ) return;
-                            _self.models = imagesM.copy;
+                            [tmpArrM removeObject:model];
+                            if ( tmpArrM.count != 0 ) return;
+                            self.models = imagesM;
                             dispatch_async(dispatch_get_main_queue(), ^{
-                                [_self.collectionView reloadData];
+                                [self.collectionView reloadData];
+                                self.tipsLabel.alpha = 0.001;
                             });
-                            
                         }
                     }];
                 }];
@@ -107,9 +125,14 @@ static NSString * const SJLocalPreviewCollectionViewCellID = @"SJLocalPreviewCol
     
     self.navigationItem.rightBarButtonItem = nil;
     
+    [self.view addSubview:self.tipsLabel];
     [self.view addSubview:self.collectionView];
     [_collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.offset(0);
+    }];
+    
+    [_tipsLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.center.offset(0);
     }];
 }
 
@@ -126,7 +149,14 @@ static NSString * const SJLocalPreviewCollectionViewCellID = @"SJLocalPreviewCol
     _collectionView.dataSource = self;
     return _collectionView;
 }
- 
+
+- (UILabel *)tipsLabel {
+    if ( _tipsLabel ) return _tipsLabel;
+    _tipsLabel = [UILabel labelWithFontSize:14 textColor:[UIColor lightGrayColor] alignment:NSTextAlignmentCenter];
+    _tipsLabel.text = @"您本地没有视频..";
+    return _tipsLabel;
+}
+
 @end
 
 #import "SJVideoInfoEditingViewController.h"
